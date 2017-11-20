@@ -13,6 +13,8 @@ public class Loader {
 		Config config = loadConfig();
 		DatabaseDriver driver = loadDatabaseDriver(config);
 
+		Context.setDatabaseDriver(driver);
+
 		// Init database
 		if (!DatabaseLoader.checkDatabase(driver)) {
 			System.out.println("Some tables are missing. Starting setup of tables.");

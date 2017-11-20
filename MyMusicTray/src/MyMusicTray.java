@@ -1,3 +1,4 @@
+import activity.RootActivity;
 import core.Loader;
 
 public class MyMusicTray {
@@ -15,7 +16,7 @@ public class MyMusicTray {
 
 		System.out.println(PROGRAM_TITLE + "\n");
 
-
+		(new RootActivity()).start();
 	}
 
 }

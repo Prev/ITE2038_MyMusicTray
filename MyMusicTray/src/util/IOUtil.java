@@ -50,12 +50,12 @@ public class IOUtil {
 		Scanner scanner = Context.getScanner();
 		int startIndex = startFromZero ? 0 : 1;
 
-		printSection('-');
+		//printSection('-');
 
 		for (int i = 0; i < choices.length; i++)
 			System.out.printf("%d: %s\n", i+startIndex, choices[i]);
 
-		System.out.print("Input: ");
+		System.out.print("> Input: ");
 		int value = -1;
 
 		try {
@@ -69,6 +69,7 @@ public class IOUtil {
 			if (value < startIndex || value >= choices.length + startIndex) {
 				System.out.println(ANSI_YELLOW + "Invalid input. Please try again." + ANSI_RESET);
 
+				printSection('-');
 				return openChoices(choices, startFromZero);
 			}
 		}

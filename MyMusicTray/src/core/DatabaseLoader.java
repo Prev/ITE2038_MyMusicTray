@@ -53,12 +53,12 @@ public class DatabaseLoader {
 		Statement stmt = driver.getStatement();
 
 		try {
-			Admin.initTable(stmt);
-			Album.initTable(stmt);
-			Artist.initTable(stmt);
-			Music.initTable(stmt);
-			PlayList.initTable(stmt);
-			User.initTable(stmt);
+			Admin.initTable();
+			Album.initTable();
+			Artist.initTable();
+			Music.initTable();
+			PlayList.initTable();
+			User.initTable();
 
 			// Constraints
 			stmt.execute("ALTER TABLE `album_artists`\n" +

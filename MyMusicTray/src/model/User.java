@@ -1,13 +1,14 @@
 package model;
 
+import core.Context;
 import exception.NotFoundException;
 
 import java.sql.*;
 
 public class User implements Model {
 
-	static public void initTable(Statement stmt) throws SQLException {
-		stmt.executeUpdate(
+	static public void initTable() throws SQLException {
+		Context.getDatabaseDriver().getStatement().executeUpdate(
 			"CREATE TABLE IF NOT EXISTS `user` (" +
 				"  `id` int(11) NOT NULL AUTO_INCREMENT," +
 				"  `name` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL," +
@@ -54,8 +55,8 @@ public class User implements Model {
 		this.phone_number = phone_number;
 	}
 
-	static public User selectById(Statement stmt, int id) throws SQLException {
-		ResultSet rs = stmt.executeQuery("SELECT * FROM user WHERE id = '"+id+"';");
+	static public User selectById(int id) throws SQLException {
+		ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery("SELECT * FROM user WHERE id = '"+id+"';");
 
 		if (!rs.next()) {
 			throw new NotFoundException("Cannot find user by id '"+id+"'");
@@ -73,8 +74,8 @@ public class User implements Model {
 	}
 
 	@Override
-	public void insert(Statement stmt) throws SQLException {
-		stmt.executeUpdate(String.format("INSERT INTO user" +
+	public void insert() throws SQLException {
+		Context.getDatabaseDriver().getStatement().executeUpdate(String.format("INSERT INTO user" +
 					" (id, name, password, birthday, email_address, phone_number) " +
 						"VALUES ('%d', '%s', '%s', '%s', '%s', '%s');",
 					id,

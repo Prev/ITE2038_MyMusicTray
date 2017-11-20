@@ -4,5 +4,5 @@ import java.sql.*;
 
 public interface Model {
 
-	void insert(Statement stmt) throws SQLException;
+	void insert() throws SQLException;
 }

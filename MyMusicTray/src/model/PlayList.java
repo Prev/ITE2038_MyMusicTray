@@ -1,10 +1,12 @@
 package model;
 
+import core.Context;
 import java.sql.*;
 
 public class PlayList implements Model {
 
-	static public void initTable(Statement stmt) throws SQLException {
+	static public void initTable() throws SQLException {
+		Statement stmt = Context.getDatabaseDriver().getStatement();
 		stmt.executeUpdate(
 				"CREATE TABLE IF NOT EXISTS `playlist` (\n" +
 						"  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
@@ -25,7 +27,7 @@ public class PlayList implements Model {
 	}
 
 	@Override
-	public void insert(Statement stmt) throws SQLException {
+	public void insert() throws SQLException {
 		// TODO
 	}
 }
