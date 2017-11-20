@@ -2,7 +2,7 @@ package model;
 
 import java.sql.*;
 
-public class Admin extends Model {
+public class Admin implements Model {
 
 	static public void initTable(Statement stmt) throws SQLException {
 		stmt.executeUpdate(

@@ -4,7 +4,7 @@ import exception.NotFoundException;
 
 import java.sql.*;
 
-public class User extends Model {
+public class User implements Model {
 
 	static public void initTable(Statement stmt) throws SQLException {
 		stmt.executeUpdate(

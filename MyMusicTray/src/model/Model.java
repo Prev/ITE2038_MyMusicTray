@@ -2,7 +2,7 @@ package model;
 
 import java.sql.*;
 
-abstract public class Model {
+public interface Model {
 
-	abstract public void insert(Statement stmt) throws SQLException;
+	void insert(Statement stmt) throws SQLException;
 }

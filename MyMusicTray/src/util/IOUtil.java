@@ -1,5 +1,7 @@
 package util;
 
+import core.Context;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -44,12 +46,17 @@ public class IOUtil {
 	}
 
 
-	public static int openChoices(Scanner scanner, String[] choices) {
+	public static int openChoices(String[] choices, boolean startFromZero) {
+		Scanner scanner = Context.getScanner();
+		int startIndex = startFromZero ? 0 : 1;
+
+		printSection('-');
+
 		for (int i = 0; i < choices.length; i++)
-			System.out.printf("%d: %s\n", i+1, choices[i]);
+			System.out.printf("%d: %s\n", i+startIndex, choices[i]);
 
 		System.out.print("Input: ");
-		int value = 0;
+		int value = -1;
 
 		try {
 			value = scanner.nextInt();
@@ -59,33 +66,33 @@ public class IOUtil {
 			// Pass to finally clause
 
 		} finally {
-			if (value <= 0 || value > choices.length) {
+			if (value < startIndex || value >= choices.length + startIndex) {
 				System.out.println(ANSI_YELLOW + "Invalid input. Please try again." + ANSI_RESET);
-				printSection('-');
 
-				return openChoices(scanner, choices);
+				return openChoices(choices, startFromZero);
 			}
 		}
 
+		scanner.nextLine();
 		return value;
 	}
 
 
-	public static String inputLine(Scanner scanner, String message, String defaultValue) {
+	public static String inputLine(String message, String defaultValue) {
 		System.out.print(message + " (default: " + defaultValue + "): ");
-		String rst = scanner.nextLine();
+		String rst = Context.getScanner().nextLine();
 		if (rst.equals("")) rst = defaultValue;
 
 		return rst;
 	}
 
-	public static String inputLine(Scanner scanner, String message) {
+	public static String inputLine(String message) {
 		System.out.print(message + ": ");
-		String rst = scanner.nextLine();
+		String rst = Context.getScanner().nextLine();
 
 		if (rst.equals("")) {
 			System.out.println(ANSI_YELLOW + "Invalid input. Please try again." + ANSI_RESET);
-			return inputLine(scanner, message);
+			return inputLine(message);
 		}
 		return rst;
 	}

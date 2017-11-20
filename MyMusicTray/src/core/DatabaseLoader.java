@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Initializer {
+public class DatabaseLoader {
 
 	static String[] TABLES = {"admin", "album", "album_artists", "album_genre",
 			"artist", "artist_musics", "music", "music_genre",
@@ -21,7 +21,7 @@ public class Initializer {
 	 * @return true if initialization is succeed
 	 * 		   false if failed
 	 */
-	static public boolean initDatabase(DatabaseDriver driver) {
+	static public boolean checkDatabase(DatabaseDriver driver) {
 		try {
 			DatabaseMetaData meta = driver.getConnection().getMetaData();
 			ResultSet res = meta.getTables(null, null, "%", null);

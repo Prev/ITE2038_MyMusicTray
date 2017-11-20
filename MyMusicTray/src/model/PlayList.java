@@ -2,7 +2,7 @@ package model;
 
 import java.sql.*;
 
-public class PlayList extends Model {
+public class PlayList implements Model {
 
 	static public void initTable(Statement stmt) throws SQLException {
 		stmt.executeUpdate(
