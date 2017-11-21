@@ -2,6 +2,10 @@ package model;
 
 import core.Context;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Album implements Model {
 
@@ -32,6 +36,58 @@ public class Album implements Model {
 						"  KEY `artist_id` (`artist_id`)\n" +
 						") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;\n"
 		);
+	}
+
+	// Album instance repository
+	static private Map<Integer, Album> repository = new HashMap<>();
+
+	/**
+	 * Instead of creating a new instance each time,
+	 *   returns an existing, already created instance with the same ID.
+	 * @return Album instance
+	 */
+	static public Album that(int id, String title, String releaseDate, int type) {
+		if (repository.containsKey(id))
+			return repository.get(id);
+		else {
+			Album newInstance = new Album(id, title, releaseDate, type);
+			repository.put(id, newInstance);
+			return newInstance;
+		}
+	}
+
+
+	static public final int TYPE_REGULAR = 0;
+	static public final int TYPE_MINI = 1;
+	static public final int TYPE_SINGLE = 2;
+
+	public int id;
+	public String title;
+	public String releaseDate;
+	public int type;
+	public List<Artist> artists;
+
+	public Album(int id,
+				 String title,
+				 String releaseDate,
+				 int type) {
+
+		this.id = id;
+		this.title = title;
+		this.releaseDate = releaseDate;
+		this.type = type;
+
+		this.artists = new ArrayList<>();
+	}
+
+	public String getArtistsString() {
+		StringBuilder sb = new StringBuilder();
+		for (Artist artist: this.artists) {
+			sb.append(artist.name);
+			sb.append(',');
+		}
+		sb.deleteCharAt(sb.length()-1);
+		return sb.toString();
 	}
 
 	@Override

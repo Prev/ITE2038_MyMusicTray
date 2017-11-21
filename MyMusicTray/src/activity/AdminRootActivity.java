@@ -1,6 +1,7 @@
 package activity;
 
 import model.Admin;
+import model.Music;
 import util.IOUtil;
 
 public class AdminRootActivity extends MenuActivity {
@@ -34,6 +35,24 @@ public class AdminRootActivity extends MenuActivity {
 		String accountId, password, passwordRe, name;
 
 		switch (choice) {
+			case 1 :
+				// View Music List
+				IOUtil.printSection("View Music List", '-');
+				System.out.printf("| %-2s | %-29s | %-17s | %-17s | %-7s |\n", "ID", "Title", "Artists", "Album", "Track No.");
+				IOUtil.printSection("", '-');
+
+				for (Music m: Music.getAllMusics()) {
+					System.out.printf("| %-2d | %-29s | %-17s | %-17s | %-7d |\n",
+							m.id,
+							m.title,
+							m.album.getArtistsString(),
+							m.album.title,
+							m.trackNo
+					);
+				}
+				System.out.println("");
+				break;
+
 			case 6 :
 				// Register New Admin
 				IOUtil.printSection("Register New Admin", '-');

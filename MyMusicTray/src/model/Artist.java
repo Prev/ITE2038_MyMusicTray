@@ -2,6 +2,8 @@ package model;
 
 import core.Context;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Artist implements Model {
 
@@ -24,6 +26,37 @@ public class Artist implements Model {
 						"  KEY `music_id` (`music_id`)\n" +
 						") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;\n"
 		);
+	}
+
+	// Artist instance repository
+	static private Map<Integer, Artist> repository = new HashMap<>();
+
+	/**
+	 * Instead of creating a new instance each time,
+	 *   returns an existing, already created instance with the same ID.
+	 * @return Artist instance
+	 */
+	static public Artist that(int id, String name, String activityStartDate) {
+		if (repository.containsKey(id))
+			return repository.get(id);
+		else {
+			Artist newInstance = new Artist(id, name, activityStartDate);
+			repository.put(id, newInstance);
+			return newInstance;
+		}
+	}
+
+	public int id;
+	public String name;
+	public String activityStartDate;
+
+	public Artist(int id,
+				  String name,
+				  String activityStartDate) {
+
+		this.id = id;
+		this.name = name;
+		this.activityStartDate = activityStartDate;
 	}
 
 	@Override
