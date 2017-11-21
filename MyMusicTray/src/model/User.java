@@ -74,16 +74,31 @@ public class User implements Model {
 	}
 
 	@Override
-	public void insert() throws SQLException {
-		Context.getDatabaseDriver().getStatement().executeUpdate(String.format("INSERT INTO user" +
-					" (id, name, password, birthday, email_address, phone_number) " +
-						"VALUES ('%d', '%s', '%s', '%s', '%s', '%s');",
-					id,
-					name,
-					password,
-					birthday,
-					email_address,
-					phone_number
-		));
+	public void insert() {
+		try {
+			Context.getDatabaseDriver().getStatement().executeUpdate(String.format("INSERT INTO user" +
+						" (id, name, password, birthday, email_address, phone_number) " +
+							"VALUES ('%d', '%s', '%s', '%s', '%s', '%s');",
+						id,
+						name,
+						password,
+						birthday,
+						email_address,
+						phone_number
+			));
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void update() {
+		// TODO
+	}
+
+	@Override
+	public void remove() {
+		// TODO
 	}
 }

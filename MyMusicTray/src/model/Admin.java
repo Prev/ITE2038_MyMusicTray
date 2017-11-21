@@ -1,9 +1,12 @@
 package model;
 
 import core.Context;
+import exception.ModelMisuseException;
 import exception.NotFoundException;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Admin implements Model {
 
@@ -20,9 +23,10 @@ public class Admin implements Model {
 		);
 	}
 
-	public int id;
+	public int id = -1;
 	public String accountId;
 	public String password;
+	public String name;
 	public String createdDate;
 
 	/**
@@ -35,11 +39,23 @@ public class Admin implements Model {
 	public Admin(int id,
 				String accountId,
 				String password,
+				String name,
 				String createdDate) {
+
 		this.id = id;
 		this.accountId = accountId;
 		this.password = password;
+		this.name = name;
 		this.createdDate = createdDate;
+	}
+
+	public Admin(String accountId,
+				 String password,
+				 String name) {
+		this.accountId = accountId;
+		this.password = password;
+		this.name = name;
+		this.createdDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
 	}
 
 
@@ -56,6 +72,7 @@ public class Admin implements Model {
 					rs.getInt("id"),
 					rs.getString("account_id"),
 					rs.getString("password"),
+					rs.getString("name"),
 					rs.getString("created_date")
 			);
 		} catch (SQLException e) {
@@ -66,19 +83,69 @@ public class Admin implements Model {
 	}
 
 	@Override
-	public void insert() throws SQLException {
-		PreparedStatement stmt = Context.getConnection().prepareStatement(
-				"INSERT INTO account (account_id, password, created_date) values(?, ?, ?);",
-				Statement.RETURN_GENERATED_KEYS
-		);
+	public void insert() {
+		if (this.id != -1) {
+			throw new ModelMisuseException(ModelMisuseException.INSERT_MISUSE);
+		}
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement(
+					"INSERT INTO admin (account_id, password, name, created_date) values(?, ?, ?, ?);",
+					Statement.RETURN_GENERATED_KEYS
+			);
 
-		stmt.setString(1, accountId);
-		stmt.setString(2, password);
-		stmt.setString(3, createdDate);
-		stmt.executeUpdate();
+			stmt.setString(1, accountId);
+			stmt.setString(2, password);
+			stmt.setString(3, name);
+			stmt.setString(4, createdDate);
+			stmt.executeUpdate();
 
-		ResultSet rs = stmt.getGeneratedKeys();
-		rs.next();
-		this.id = rs.getInt(1); // Auto-incremented value
+			ResultSet rs = stmt.getGeneratedKeys();
+			rs.next();
+			this.id = rs.getInt(1); // Auto-incremented value
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void update() {
+		if (this.id == -1) {
+			throw new ModelMisuseException(ModelMisuseException.UPDATE_MISUSE);
+		}
+
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement(
+					"UPDATE admin SET account_id = ?, password = ?, name = ? WHERE id = ?;"
+			);
+
+			stmt.setString(1, this.accountId);
+			stmt.setString(2, this.password);
+			stmt.setString(3, this.name);
+			stmt.setString(4, Integer.toString(this.id));
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void remove() {
+		if (this.id == -1) {
+			throw new ModelMisuseException(ModelMisuseException.REMOVE_MISUSE);
+		}
+
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement(
+					"DELETE FROM admin WHERE id = ?;"
+			);
+			stmt.setString(1, Integer.toString(this.id));
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

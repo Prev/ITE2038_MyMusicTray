@@ -27,7 +27,17 @@ public class PlayList implements Model {
 	}
 
 	@Override
-	public void insert() throws SQLException {
+	public void insert() {
+		// TODO
+	}
+
+	@Override
+	public void update() {
+		// TODO
+	}
+
+	@Override
+	public void remove() {
 		// TODO
 	}
 }

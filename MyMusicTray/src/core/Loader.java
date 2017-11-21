@@ -21,6 +21,8 @@ public class Loader {
 
 			DatabaseLoader.setupTables(driver);
 
+			// TODO: register admin on init
+
 		}else {
 			System.out.println("All tables are exists. Start Program.");
 		}

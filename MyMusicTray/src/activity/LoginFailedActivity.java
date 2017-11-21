@@ -13,11 +13,7 @@ public class LoginFailedActivity extends MenuActivity {
 
 	@Override
 	public void start() {
-		IOUtil.printSection('-');
-		IOUtil.printSection("<Login Failed>", ' ');
-		IOUtil.printSection(message, ' ');
-		IOUtil.printSection('-');
-
+		IOUtil.printPopup("Login Failed", message);
 		super.start();
 	}
 

@@ -22,12 +22,10 @@ public class AdminLoginActivity extends Activity {
 			Admin model = Admin.selectByAccountId(id);
 
 			if (model.password.equals(password)) {
-				IOUtil.printSection('-');
-				IOUtil.printSection("<Login Succeed>", ' ');
-				IOUtil.printSection('-');
+				IOUtil.printPopup("Login Succeed", "Hello " + model.name);
 
 				// Root Activity is previous one
-				(new AdminRootActivity(this.previousActivity)).start();
+				(new AdminRootActivity(this.previousActivity, model)).start();
 
 			}else {
 				(new LoginFailedActivity(

@@ -46,6 +46,22 @@ public class IOUtil {
 	}
 
 
+	public static void printPopup(String title, String message) {
+		System.out.print(ANSI_GREEN);
+
+		IOUtil.printSection('-');
+		IOUtil.printSection("<" + title + ">", ' ');
+		if (message != null)
+			IOUtil.printSection(message, ' ');
+		IOUtil.printSection('-');
+
+		System.out.print(ANSI_RESET);
+	}
+	public static void printPopup(String title) {
+		printPopup(title, null);
+
+	}
+
 	public static int openChoices(String[] choices, boolean startFromZero) {
 		Scanner scanner = Context.getScanner();
 		int startIndex = startFromZero ? 0 : 1;
