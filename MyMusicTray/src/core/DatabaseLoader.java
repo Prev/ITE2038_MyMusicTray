@@ -53,14 +53,26 @@ public class DatabaseLoader {
 		Statement stmt = driver.getStatement();
 
 		try {
+			System.out.println("Init admin table");
 			Admin.initTable();
+
+			System.out.println("Init album table");
 			Album.initTable();
+
+			System.out.println("Init artist table");
 			Artist.initTable();
+
+			System.out.println("Init music table");
 			Music.initTable();
+
+			System.out.println("Init playlist table");
 			PlayList.initTable();
+
+			System.out.println("Init user table");
 			User.initTable();
 
 			// Constraints
+			System.out.println("Init constraints");
 			stmt.execute("ALTER TABLE `album_artists`\n" +
 					"  ADD CONSTRAINT `album_artists_ibfk_1` FOREIGN KEY (`album_id`) REFERENCES `album` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,\n" +
 					"  ADD CONSTRAINT `album_artists_ibfk_2` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;\n"

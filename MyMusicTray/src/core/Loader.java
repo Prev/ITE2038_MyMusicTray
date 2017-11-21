@@ -1,5 +1,6 @@
 package core;
 
+import model.Admin;
 import util.IOUtil;
 import java.sql.SQLException;
 
@@ -18,10 +19,10 @@ public class Loader {
 		// Init database
 		if (!DatabaseLoader.checkDatabase(driver)) {
 			System.out.println("Some tables are missing. Starting setup of tables.");
-
 			DatabaseLoader.setupTables(driver);
 
-			// TODO: register admin on init
+			// Register admin on init
+			registerFirstAdmin();
 
 		}else {
 			System.out.println("All tables are exists. Start Program.");
@@ -100,4 +101,30 @@ public class Loader {
 	}
 
 
+	/**
+	 * Register the first admin to program.
+	 */
+	private static void registerFirstAdmin() {
+		IOUtil.printPopup("Register Admin", "Register the first admin of this program");
+		String accountId, password, passwordRe, name;
+		boolean passed;
+
+		do {
+			accountId = IOUtil.inputLine("Input account ID");
+			password = IOUtil.inputLine("Input password");
+			passwordRe = IOUtil.inputLine("Input password again");
+			name = IOUtil.inputLine("Input name");
+
+			passed = password.equals(passwordRe);
+
+			if (!passed)
+				System.err.println("Please input same password");
+
+		}while (!passed);
+
+		Admin newAdminModel = new Admin(accountId, password, name);
+		newAdminModel.insert();
+
+		IOUtil.printSection("Register Success!");
+	}
 }
