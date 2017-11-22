@@ -56,6 +56,49 @@ public class Album implements Model {
 		}
 	}
 
+	/**
+	 * Get all albums in database with artists
+	 * @return List of Arist instance
+	 */
+	public static List<Album> getAllAlbums() {
+		Map<Integer, Album> albumDict = new HashMap<>();
+
+		try {
+			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
+					"SELECT album.*, \n" +
+							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start\n" +
+						"FROM album, artist, album_artists\n" +
+						"WHERE album_artists.album_id = album.id\n" +
+						"AND album_artists.artist_id = artist.id"
+			);
+
+			while (rs.next()) {
+				Album albumModel = Album.that(
+						rs.getInt("id"),
+						rs.getString("title"),
+						rs.getString("release_date"),
+						rs.getInt("type")
+				);
+				Artist artistModel = Artist.that(
+						rs.getInt("artist_id"),
+						rs.getString("artist_name"),
+						rs.getString("artist_act_start")
+				);
+
+				if (!albumModel.artists.contains(artistModel))
+					albumModel.artists.add(artistModel);
+
+				albumDict.put(albumModel.id, albumModel);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return new ArrayList<>(albumDict.values());
+	}
+
+
 
 	static public final int TYPE_REGULAR = 0;
 	static public final int TYPE_MINI = 1;
@@ -88,6 +131,19 @@ public class Album implements Model {
 		}
 		sb.deleteCharAt(sb.length()-1);
 		return sb.toString();
+	}
+
+	public String getReadableType() {
+		switch (this.type) {
+			case TYPE_REGULAR:
+				return "REGULAR";
+			case TYPE_MINI:
+				return "MINI";
+			case TYPE_SINGLE:
+				return "SINGLE";
+			default:
+				return null;
+		}
 	}
 
 	@Override

@@ -51,7 +51,7 @@ public class Music implements Model {
 	 * @return List of Music instance
 	 */
 	public static List<Music> getAllMusics() {
-		Map<Integer, Music> musicSet = new HashMap<>();
+		Map<Integer, Music> musicDict = new HashMap<>();
 
 		try {
 			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
@@ -88,14 +88,14 @@ public class Music implements Model {
 						albumModel,
 						rs.getInt("track_no")
 				);
-				musicSet.put(musicModel.id, musicModel);
+				musicDict.put(musicModel.id, musicModel);
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		return new ArrayList<>(musicSet.values());
+		return new ArrayList<>(musicDict.values());
 	}
 
 

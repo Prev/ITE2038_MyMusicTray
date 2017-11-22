@@ -2,7 +2,9 @@ package model;
 
 import core.Context;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Artist implements Model {
@@ -45,6 +47,33 @@ public class Artist implements Model {
 			return newInstance;
 		}
 	}
+
+
+	/**
+	 * Get all artists in database
+	 * @return List of Arist instance
+	 */
+	public static List<Artist> getAllArtists() {
+		List<Artist> ret = new ArrayList<>();
+
+		try {
+			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery("SELECT * FROM `artist`");
+
+			while (rs.next()) {
+				ret.add(new Artist(
+						rs.getInt("id"),
+						rs.getString("name"),
+						rs.getString("activity_start_date")
+				));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return ret;
+	}
+
 
 	public int id;
 	public String name;

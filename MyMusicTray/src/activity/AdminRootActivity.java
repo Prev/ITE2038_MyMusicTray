@@ -37,20 +37,17 @@ public class AdminRootActivity extends MenuActivity {
 		switch (choice) {
 			case 1 :
 				// View Music List
-				IOUtil.printSection("View Music List", '-');
-				System.out.printf("| %-2s | %-29s | %-17s | %-17s | %-7s |\n", "ID", "Title", "Artists", "Album", "Track No.");
-				IOUtil.printSection("", '-');
+				(new MusicListActivity(this)).start();
+				break;
 
-				for (Music m: Music.getAllMusics()) {
-					System.out.printf("| %-2d | %-29s | %-17s | %-17s | %-7d |\n",
-							m.id,
-							m.title,
-							m.album.getArtistsString(),
-							m.album.title,
-							m.trackNo
-					);
-				}
-				System.out.println("");
+			case 2:
+				// View Artist List
+				(new ArtistListActivity(this)).start();
+				break;
+
+			case 3:
+				// View Album List
+				(new AlbumListActivity(this)).start();
 				break;
 
 			case 6 :
