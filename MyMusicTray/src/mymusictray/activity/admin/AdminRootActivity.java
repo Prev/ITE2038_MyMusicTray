@@ -54,7 +54,8 @@ public class AdminRootActivity extends MenuActivity {
 				break;
 
 			case 4:
-				//
+				// Add New Artist
+				(new ArtistInsertingActivity(this)).start();
 				break;
 
 			case 6 :

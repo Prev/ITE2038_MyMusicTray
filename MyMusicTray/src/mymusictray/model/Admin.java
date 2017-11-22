@@ -23,7 +23,7 @@ public class Admin implements Model {
 		);
 	}
 
-	public int id = -1;
+	public int id;
 	public String accountId;
 	public String password;
 	public String name;
@@ -52,6 +52,7 @@ public class Admin implements Model {
 	public Admin(String accountId,
 				 String password,
 				 String name) {
+		this.id = -1;
 		this.accountId = accountId;
 		this.password = password;
 		this.name = name;
@@ -93,10 +94,10 @@ public class Admin implements Model {
 					Statement.RETURN_GENERATED_KEYS
 			);
 
-			stmt.setString(1, accountId);
-			stmt.setString(2, password);
-			stmt.setString(3, name);
-			stmt.setString(4, createdDate);
+			stmt.setString(1, this.accountId);
+			stmt.setString(2, this.password);
+			stmt.setString(3, this.name);
+			stmt.setString(4, this.createdDate);
 			stmt.executeUpdate();
 
 			ResultSet rs = stmt.getGeneratedKeys();

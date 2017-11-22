@@ -1,6 +1,8 @@
 package mymusictray.model;
 
 import mymusictray.core.Context;
+import mymusictray.exception.ModelMisuseException;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,9 +89,35 @@ public class Artist implements Model {
 		this.activityStartDate = activityStartDate;
 	}
 
+	public Artist(String name,
+				  String activityStartDate) {
+		this.id = -1;
+		this.name = name;
+		this.activityStartDate = activityStartDate;
+	}
+
 	@Override
 	public void insert() {
-		// TODO
+		if (this.id != -1) {
+			throw new ModelMisuseException(ModelMisuseException.INSERT_MISUSE);
+		}
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement(
+					"INSERT INTO artist (name, activity_start_date) values(?, ?);",
+					Statement.RETURN_GENERATED_KEYS
+			);
+			stmt.setString(1, this.name);
+			stmt.setString(2, this.activityStartDate);
+			stmt.executeUpdate();
+
+			ResultSet rs = stmt.getGeneratedKeys();
+			rs.next();
+			this.id = rs.getInt(1); // Auto-incremented value
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
