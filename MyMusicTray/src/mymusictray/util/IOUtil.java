@@ -177,6 +177,34 @@ public class IOUtil {
 		return rst;
 	}
 
+	/**
+	 * Input natural number with guaranteed feature
+	 * @param message: Message to show before input
+	 * @return User typed natural number
+	 */
+	public static int inputNatural(String message) {
+		System.out.print(message + ": ");
+		int value = -1;
+
+		try {
+			value = Context.getScanner().nextInt();
+			//Context.getScanner().next();
+
+		} catch (InputMismatchException e) {
+			// Pass to finally clause
+
+		} finally {
+			if (value < -1) {
+				System.out.println(ANSI_YELLOW + "Invalid input. Please try again." + ANSI_RESET);
+
+				printSection('-');
+				return inputNatural(message);
+			}
+		}
+
+		return value;
+	}
+
 
 	/**
 	 * Input line that's format is date (guarantee string is date)

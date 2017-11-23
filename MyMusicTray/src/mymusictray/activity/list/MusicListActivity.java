@@ -27,7 +27,5 @@ public class MusicListActivity extends Activity {
 			);
 		}
 		System.out.println("");
-
-		this.previousActivity.start();
 	}
 }

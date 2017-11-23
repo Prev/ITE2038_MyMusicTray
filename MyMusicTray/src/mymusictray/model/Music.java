@@ -1,6 +1,8 @@
 package mymusictray.model;
 
 import mymusictray.core.Context;
+import mymusictray.exception.ModelMisuseException;
+
 import java.sql.*;
 import java.util.*;
 
@@ -12,7 +14,6 @@ public class Music implements Model {
 				"CREATE TABLE IF NOT EXISTS `music` (" +
 						"  `id` int(11) NOT NULL AUTO_INCREMENT," +
 						"  `title` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL," +
-						"  `lyrics` text COLLATE utf8mb4_unicode_ci NOT NULL," +
 						"  `album_id` int(11) NOT NULL," +
 						"  `track_no` int(11) NOT NULL," +
 						"  PRIMARY KEY (`id`)," +
@@ -36,11 +37,11 @@ public class Music implements Model {
 	 *   returns an existing, already created instance with the same ID.
 	 * @return Music instance
 	 */
-	static public Music that(int id, String title, String lyrics, Album album, int trackNo) {
+	static public Music that(int id, String title, Album album, int trackNo) {
 		if (repository.containsKey(id))
 			return repository.get(id);
 		else {
-			Music newInstance = new Music(id, title, lyrics, album, trackNo);
+			Music newInstance = new Music(id, title, album, trackNo);
 			repository.put(id, newInstance);
 			return newInstance;
 		}
@@ -55,13 +56,20 @@ public class Music implements Model {
 
 		try {
 			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
-					"SELECT music.*," +
+					/*"SELECT music.*," +
 								"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start," +
 								"album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type " +
 						"FROM music, artist, album, album_artists\n" +
 						"WHERE music.album_id = album.id\n" +
 						"AND album_artists.album_id = album.id\n" +
-						"AND album_artists.artist_id = artist.id"
+						"AND album_artists.artist_id = artist.id"*/
+					"SELECT music.*,\n" +
+							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start,\n" +
+							"album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type \n" +
+						"FROM music\n" +
+						"LEFT JOIN album ON album.id = music.album_id\n" +
+						"LEFT JOIN album_artists ON music.album_id = album_artists.album_id\n" +
+						"LEFT JOIN artist ON album_artists.artist_id = artist.id;\n"
 			);
 
 			while (rs.next()) {
@@ -84,7 +92,6 @@ public class Music implements Model {
 				Music musicModel = Music.that(
 						rs.getInt("id"),
 						rs.getString("title"),
-						rs.getString("lyrics"),
 						albumModel,
 						rs.getInt("track_no")
 				);
@@ -101,27 +108,53 @@ public class Music implements Model {
 
 	public int id;
 	public String title;
-	public String lyrics;
 	public Album album;
 	public int trackNo;
 
 	public Music(int id,
 				 String title,
-				 String lyrics,
 				 Album album,
 				 int trackNo) {
 
 		this.id = id;
 		this.title = title;
-		this.lyrics = lyrics;
 		this.album = album;
 		this.trackNo = trackNo;
+
+		if (this.album != null && !this.album.musics.contains(this))
+			this.album.musics.add(this);
+
+	}
+
+	public Music(String title,
+				 Album album,
+				 int trackNo) {
+		this(-1, title, album, trackNo);
 	}
 
 
 	@Override
 	public void insert() {
-		// TODO
+		if (this.id != -1) {
+			throw new ModelMisuseException(ModelMisuseException.INSERT_MISUSE);
+		}
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement(
+					"INSERT INTO music (title, album_id, track_no) values(?, ?, ?);",
+					Statement.RETURN_GENERATED_KEYS
+			);
+			stmt.setString(1, this.title);
+			stmt.setInt(2, this.album.id);
+			stmt.setInt(3, this.trackNo);
+			stmt.executeUpdate();
+
+			ResultSet rs = stmt.getGeneratedKeys();
+			rs.next();
+			this.id = rs.getInt(1); // Auto-incremented value
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

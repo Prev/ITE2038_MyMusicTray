@@ -1,6 +1,8 @@
 package mymusictray.model;
 
 import mymusictray.core.Context;
+import mymusictray.exception.ModelMisuseException;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,11 +66,16 @@ public class Album implements Model {
 
 		try {
 			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
-					"SELECT album.*, \n" +
+					/*"SELECT album.*, \n" +
 							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start\n" +
 						"FROM album, artist, album_artists\n" +
 						"WHERE album_artists.album_id = album.id\n" +
-						"AND album_artists.artist_id = artist.id"
+						"AND album_artists.artist_id = artist.id"*/
+					"SELECT album.*," +
+							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start\n" +
+						"FROM album\n" +
+						"LEFT JOIN album_artists ON album.id = album_artists.album_id\n" +
+						"LEFT JOIN artist ON album_artists.artist_id = artist.id;"
 			);
 
 			while (rs.next()) {
@@ -99,15 +106,34 @@ public class Album implements Model {
 
 
 
-	static public final int TYPE_REGULAR = 0;
-	static public final int TYPE_MINI = 1;
-	static public final int TYPE_SINGLE = 2;
+	static public final int TYPE_REGULAR = 1;
+	static public final int TYPE_MINI = 2;
+	static public final int TYPE_SINGLE = 3;
+
+	/**
+	 * Convert integer type to readable string
+	 * @param type: Type of album
+	 * @return Readable string
+	 */
+	static public String getReadableType(int type) {
+		switch (type) {
+			case TYPE_REGULAR:
+				return "REGULAR";
+			case TYPE_MINI:
+				return "MINI";
+			case TYPE_SINGLE:
+				return "SINGLE";
+			default:
+				return null;
+		}
+	}
 
 	public int id;
 	public String title;
 	public String releaseDate;
 	public int type;
 	public List<Artist> artists;
+	public List<Music> musics;
 
 	public Album(int id,
 				 String title,
@@ -120,6 +146,14 @@ public class Album implements Model {
 		this.type = type;
 
 		this.artists = new ArrayList<>();
+		this.musics = new ArrayList<>();
+	}
+
+	public Album(String title,
+				 String releaseDate,
+				 int type) {
+
+		this(-1, title, releaseDate, type);
 	}
 
 	public String getArtistsString() {
@@ -133,21 +167,32 @@ public class Album implements Model {
 	}
 
 	public String getReadableType() {
-		switch (this.type) {
-			case TYPE_REGULAR:
-				return "REGULAR";
-			case TYPE_MINI:
-				return "MINI";
-			case TYPE_SINGLE:
-				return "SINGLE";
-			default:
-				return null;
-		}
+		return getReadableType(this.type);
 	}
 
 	@Override
 	public void insert() {
-		// TODO
+		if (this.id != -1) {
+			throw new ModelMisuseException(ModelMisuseException.INSERT_MISUSE);
+		}
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement(
+					"INSERT INTO album (title, release_date, type) values(?, ?, ?);",
+					Statement.RETURN_GENERATED_KEYS
+			);
+			stmt.setString(1, this.title);
+			stmt.setString(2, this.releaseDate);
+			stmt.setInt(3, this.type);
+			stmt.executeUpdate();
+
+			ResultSet rs = stmt.getGeneratedKeys();
+			rs.next();
+			this.id = rs.getInt(1); // Auto-incremented value
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

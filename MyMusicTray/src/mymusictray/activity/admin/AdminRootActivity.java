@@ -1,11 +1,8 @@
 package mymusictray.activity.admin;
 
 import mymusictray.activity.*;
-import mymusictray.activity.list.AlbumListActivity;
-import mymusictray.activity.list.ArtistListActivity;
-import mymusictray.activity.list.MusicListActivity;
+import mymusictray.activity.list.*;
 import mymusictray.model.Admin;
-import mymusictray.util.IOUtil;
 
 public class AdminRootActivity extends MenuActivity {
 
@@ -35,8 +32,6 @@ public class AdminRootActivity extends MenuActivity {
 
 	@Override
 	public void operate(int choice) {
-		String accountId, password, passwordRe, name;
-
 		switch (choice) {
 			case 1 :
 				// View Music List
@@ -50,7 +45,8 @@ public class AdminRootActivity extends MenuActivity {
 
 			case 3:
 				// View Album List
-				(new AlbumListActivity(this)).start();
+				(new AlbumListActivity(this)).startWithManaging();
+
 				break;
 
 			case 4:
@@ -58,63 +54,26 @@ public class AdminRootActivity extends MenuActivity {
 				(new ArtistInsertingActivity(this)).start();
 				break;
 
-			case 6 :
-				// Register New Admin
-				IOUtil.printSection("Register New Admin", '-');
-
-				accountId = IOUtil.inputLine("Input account ID");
-				password = IOUtil.inputLine("Input password");
-				passwordRe = IOUtil.inputLine("Input password again");
-				name = IOUtil.inputLine("Input name");
-
-				if (!password.equals(passwordRe)) {
-					System.err.println("Please input same password");
-					operate(6);
-					return;
-				}
-
-				Admin newAdminModel = new Admin(accountId, password, name);
-				newAdminModel.insert();
-
-				IOUtil.printPopup("New Admin is created");
+			case 5:
+				// Add New Album and Music
+				(new AlbumAndMusicInsertingActivity(this)).start();
 				break;
 
+			case 6 :
+				// Register New Admin
+				(new RegisterNewAdminActivity(this)).start();
+				break;
 
 			case 7:
 				// Change Password
-				IOUtil.printSection("Change password", '-');
-
-				password = IOUtil.inputLine("Input new password");
-				passwordRe = IOUtil.inputLine("Input new password again");
-
-				if (!password.equals(passwordRe)) {
-					System.err.println("Please input same password");
-					operate(7);
-					return;
-				}
-
-				this.model.password = password;
-				this.model.update();
-
-				IOUtil.printPopup("Password is changed");
+				(new ChangeAdminPasswordActivity(this, this.model)).start();
 				break;
 
 			case 8:
 				// Remove this account
-				IOUtil.printSection("Remove this account", '-');
-				System.out.println("WARNING!! This action can not be undone once performed.");
+				(new RemoveAdminActivity(this, this.model)).start();
 
-				password = IOUtil.inputLine("Input password");
-
-				if (!this.model.password.equals(password)) {
-					System.err.println("Password is wrong.");
-					operate(8);
-					return;
-				}
-
-				this.model.remove();
-
-				IOUtil.printPopup("Account is removed");
+				// Go home
 				this.previousActivity.start();
 				return;
 
@@ -124,6 +83,6 @@ public class AdminRootActivity extends MenuActivity {
 
 		}
 
-		start();
+		this.start();
 	}
 }

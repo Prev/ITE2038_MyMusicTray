@@ -52,11 +52,8 @@ public class Admin implements Model {
 	public Admin(String accountId,
 				 String password,
 				 String name) {
-		this.id = -1;
-		this.accountId = accountId;
-		this.password = password;
-		this.name = name;
-		this.createdDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+
+		this(-1, accountId, password, name, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 	}
 
 

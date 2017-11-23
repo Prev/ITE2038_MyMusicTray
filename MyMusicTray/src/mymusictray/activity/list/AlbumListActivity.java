@@ -1,11 +1,14 @@
 package mymusictray.activity.list;
 
 import mymusictray.activity.Activity;
+import mymusictray.activity.MenuActivity;
+import mymusictray.activity.admin.AlbumManageActivity;
 import mymusictray.model.Album;
 import mymusictray.util.IOUtil;
 
-public class AlbumListActivity extends Activity {
+import java.util.List;
 
+public class AlbumListActivity extends Activity {
 
 	public AlbumListActivity(Activity previousActivity) {
 		super(previousActivity);
@@ -28,7 +31,40 @@ public class AlbumListActivity extends Activity {
 			);
 		}
 		System.out.println("");
+	}
 
-		this.previousActivity.start();
+	public void startWithManaging() {
+		this.start();
+
+		(new ListSelectingActivity(this, Album.getAllAlbums())).start();
+	}
+
+	class ListSelectingActivity extends MenuActivity{
+
+		private List<Album> albums;
+
+		public ListSelectingActivity(Activity previousActivity, List<Album> albums) {
+			super(previousActivity);
+			this.albums = albums;
+		}
+
+		@Override
+		public String getFirstMenuTitle() { return "Close List"; }
+
+		@Override
+		public String[] getMenu() {
+			String[] ret = new String[albums.size()];
+			for (int i = 0; i < albums.size(); i++)
+				ret[i] = "Manage '" + (albums.get(i).title) + "'";
+			return ret;
+		}
+
+		@Override
+		public void operate(int choice) {
+			(new AlbumManageActivity(
+					this.previousActivity,
+					this.albums.get(choice-1)
+			)).start();
+		}
 	}
 }

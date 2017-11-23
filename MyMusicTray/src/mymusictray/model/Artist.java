@@ -91,9 +91,8 @@ public class Artist implements Model {
 
 	public Artist(String name,
 				  String activityStartDate) {
-		this.id = -1;
-		this.name = name;
-		this.activityStartDate = activityStartDate;
+
+		this(-1, name, activityStartDate);
 	}
 
 	@Override

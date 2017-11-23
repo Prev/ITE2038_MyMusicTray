@@ -24,7 +24,5 @@ public class ArtistListActivity extends Activity {
 			);
 		}
 		System.out.println("");
-
-		this.previousActivity.start();
 	}
 }
