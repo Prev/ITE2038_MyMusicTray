@@ -1,14 +1,15 @@
 package mymusictray.model;
 
 import mymusictray.core.Context;
-import mymusictray.exception.ModelMisuseException;
 import mymusictray.exception.NotFoundException;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Admin implements Model {
+public class Admin extends StrongTypeModel {
 
 	static public void initTable() throws SQLException {
 		Context.getDatabaseDriver().getStatement().executeUpdate(
@@ -22,40 +23,6 @@ public class Admin implements Model {
 						") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;\n"
 		);
 	}
-
-	public int id;
-	public String accountId;
-	public String password;
-	public String name;
-	public String createdDate;
-
-	/**
-	 * Constructor of User Model
-	 * @param id
-	 * @param accountId
-	 * @param password
-	 * @param createdDate
-	 */
-	public Admin(int id,
-				String accountId,
-				String password,
-				String name,
-				String createdDate) {
-
-		this.id = id;
-		this.accountId = accountId;
-		this.password = password;
-		this.name = name;
-		this.createdDate = createdDate;
-	}
-
-	public Admin(String accountId,
-				 String password,
-				 String name) {
-
-		this(-1, accountId, password, name, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
-	}
-
 
 	static public Admin selectByAccountId(String accountId) {
 		try {
@@ -80,69 +47,47 @@ public class Admin implements Model {
 		return null;
 	}
 
-	@Override
-	public void insert() {
-		if (this.id != -1) {
-			throw new ModelMisuseException(ModelMisuseException.INSERT_MISUSE);
-		}
-		try {
-			PreparedStatement stmt = Context.getConnection().prepareStatement(
-					"INSERT INTO admin (account_id, password, name, created_date) values(?, ?, ?, ?);",
-					Statement.RETURN_GENERATED_KEYS
-			);
+	public String accountId;
+	public String password;
+	public String name;
+	public String createdDate;
 
-			stmt.setString(1, this.accountId);
-			stmt.setString(2, this.password);
-			stmt.setString(3, this.name);
-			stmt.setString(4, this.createdDate);
-			stmt.executeUpdate();
+	/**
+	 * Constructor of User Model
+	 * @param id
+	 * @param accountId
+	 * @param password
+	 * @param createdDate
+	 */
+	public Admin(int id,
+				String accountId,
+				String password,
+				String name,
+				String createdDate) {
 
-			ResultSet rs = stmt.getGeneratedKeys();
-			rs.next();
-			this.id = rs.getInt(1); // Auto-incremented value
+		super("admin");
+		this.id = id;
+		this.accountId = accountId;
+		this.password = password;
+		this.name = name;
+		this.createdDate = createdDate;
 
+	}
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public Admin(String accountId,
+				 String password,
+				 String name) {
+
+		this(-1, accountId, password, name, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 	}
 
 	@Override
-	public void update() {
-		if (this.id == -1) {
-			throw new ModelMisuseException(ModelMisuseException.UPDATE_MISUSE);
-		}
-
-		try {
-			PreparedStatement stmt = Context.getConnection().prepareStatement(
-					"UPDATE admin SET account_id = ?, password = ?, name = ? WHERE id = ?;"
-			);
-
-			stmt.setString(1, this.accountId);
-			stmt.setString(2, this.password);
-			stmt.setString(3, this.name);
-			stmt.setInt(4, this.id);
-			stmt.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void remove() {
-		if (this.id == -1) {
-			throw new ModelMisuseException(ModelMisuseException.REMOVE_MISUSE);
-		}
-		try {
-			PreparedStatement stmt = Context.getConnection().prepareStatement(
-					"DELETE FROM admin WHERE id = ?;"
-			);
-			stmt.setInt(1, this.id);
-			stmt.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public Map<String, String> getSubAttributes() {
+		Map<String, String > ret = new HashMap<>();
+		ret.put("account_id", accountId);
+		ret.put("password", password);
+		ret.put("name", name);
+		ret.put("created_date", createdDate);
+		return ret;
 	}
 }

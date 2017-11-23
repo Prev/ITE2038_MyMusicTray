@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Album implements Model {
+public class Album extends StrongTypeModel {
 
 	static public void initTable() throws SQLException {
 		Statement stmt = Context.getDatabaseDriver().getStatement();
@@ -144,7 +144,6 @@ public class Album implements Model {
 		}
 	}
 
-	public int id;
 	public String title;
 	public String releaseDate;
 	public int type;
@@ -156,6 +155,7 @@ public class Album implements Model {
 				 String releaseDate,
 				 int type) {
 
+		super("album");
 		this.id = id;
 		this.title = title;
 		this.releaseDate = releaseDate;
@@ -184,6 +184,15 @@ public class Album implements Model {
 
 	public String getReadableType() {
 		return getReadableType(this.type);
+	}
+
+	@Override
+	public Map<String, String> getSubAttributes() {
+		Map<String, String > ret = new HashMap<>();
+		ret.put("title", title);
+		ret.put("release_date", releaseDate);
+		ret.put("type", Integer.toString(type));
+		return ret;
 	}
 
 	@Override
@@ -218,6 +227,18 @@ public class Album implements Model {
 
 	@Override
 	public void remove() {
-		// TODO
+		if (this.id == -1) {
+			throw new ModelMisuseException(ModelMisuseException.REMOVE_MISUSE);
+		}
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement(
+					"DELETE FROM `album` WHERE `id` = ?"
+			);
+			stmt.setInt(1, this.id);
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,7 +1,6 @@
 package mymusictray.model;
 
 import mymusictray.core.Context;
-import mymusictray.exception.ModelMisuseException;
 import mymusictray.exception.NotFoundException;
 
 import java.sql.*;
@@ -10,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Artist implements Model {
+public class Artist extends StrongTypeModel {
 
 	static public void initTable() throws SQLException {
 		Statement stmt = Context.getDatabaseDriver().getStatement();
@@ -96,8 +95,6 @@ public class Artist implements Model {
 	}
 
 
-
-	public int id;
 	public String name;
 	public String activityStartDate;
 
@@ -105,6 +102,7 @@ public class Artist implements Model {
 				  String name,
 				  String activityStartDate) {
 
+		super("artist");
 		this.id = id;
 		this.name = name;
 		this.activityStartDate = activityStartDate;
@@ -116,28 +114,13 @@ public class Artist implements Model {
 		this(-1, name, activityStartDate);
 	}
 
+
 	@Override
-	public void insert() {
-		if (this.id != -1) {
-			throw new ModelMisuseException(ModelMisuseException.INSERT_MISUSE);
-		}
-		try {
-			PreparedStatement stmt = Context.getConnection().prepareStatement(
-					"INSERT INTO artist (name, activity_start_date) values(?, ?);",
-					Statement.RETURN_GENERATED_KEYS
-			);
-			stmt.setString(1, this.name);
-			stmt.setString(2, this.activityStartDate);
-			stmt.executeUpdate();
-
-			ResultSet rs = stmt.getGeneratedKeys();
-			rs.next();
-			this.id = rs.getInt(1); // Auto-incremented value
-
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public Map<String, String> getSubAttributes() {
+		Map<String, String > ret = new HashMap<>();
+		ret.put("name", name);
+		ret.put("activity_start_date", activityStartDate);
+		return ret;
 	}
 
 	public void addRelationWithAlbum(Album album) {
@@ -149,18 +132,9 @@ public class Artist implements Model {
 
 			album.artists.add(this);
 
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void update() {
-		// TODO
-	}
-
-	@Override
-	public void remove() {
-		// TODO
 	}
 }

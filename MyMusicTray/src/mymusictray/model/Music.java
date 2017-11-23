@@ -1,12 +1,11 @@
 package mymusictray.model;
 
 import mymusictray.core.Context;
-import mymusictray.exception.ModelMisuseException;
 
 import java.sql.*;
 import java.util.*;
 
-public class Music implements Model {
+public class Music extends StrongTypeModel {
 
 	static public void initTable() throws SQLException {
 		Statement stmt = Context.getDatabaseDriver().getStatement();
@@ -106,7 +105,6 @@ public class Music implements Model {
 	}
 
 
-	public int id;
 	public String title;
 	public Album album;
 	public int trackNo;
@@ -116,6 +114,7 @@ public class Music implements Model {
 				 Album album,
 				 int trackNo) {
 
+		super("music");
 		this.id = id;
 		this.title = title;
 		this.album = album;
@@ -134,49 +133,11 @@ public class Music implements Model {
 
 
 	@Override
-	public void insert() {
-		if (this.id != -1) {
-			throw new ModelMisuseException(ModelMisuseException.INSERT_MISUSE);
-		}
-		try {
-			PreparedStatement stmt = Context.getConnection().prepareStatement(
-					"INSERT INTO music (title, album_id, track_no) values(?, ?, ?);",
-					Statement.RETURN_GENERATED_KEYS
-			);
-			stmt.setString(1, this.title);
-			stmt.setInt(2, this.album.id);
-			stmt.setInt(3, this.trackNo);
-			stmt.executeUpdate();
-
-			ResultSet rs = stmt.getGeneratedKeys();
-			rs.next();
-			this.id = rs.getInt(1); // Auto-incremented value
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void update() {
-		// TODO
-	}
-
-	@Override
-	public void remove() {
-		if (this.id == -1) {
-			throw new ModelMisuseException(ModelMisuseException.REMOVE_MISUSE);
-		}
-		try {
-			PreparedStatement stmt = Context.getConnection().prepareStatement(
-					"DELETE FROM `music` WHERE `id` = ?"
-			);
-			stmt.setInt(1, this.id);
-			stmt.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
+	public Map<String, String> getSubAttributes() {
+		Map<String, String > ret = new HashMap<>();
+		ret.put("title", title);
+		ret.put("album_id", Integer.toString(album.id));
+		ret.put("track_no", Integer.toString(trackNo));
+		return ret;
 	}
 }

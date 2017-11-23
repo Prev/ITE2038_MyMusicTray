@@ -4,8 +4,10 @@ import mymusictray.core.Context;
 import mymusictray.exception.NotFoundException;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
-public class User implements Model {
+public class User extends StrongTypeModel {
 
 	static public void initTable() throws SQLException {
 		Context.getDatabaseDriver().getStatement().executeUpdate(
@@ -22,13 +24,12 @@ public class User implements Model {
 		);
 	}
 
-	int id;
 	String name;
 	String password;
 	String birthday;
-	String register_date;
-	String email_address;
-	String phone_number;
+	String registerDate;
+	String emailAddress;
+	String phoneNumber;
 
 	/**
 	 * Constructor of User Model
@@ -36,23 +37,25 @@ public class User implements Model {
 	 * @param name
 	 * @param password
 	 * @param birthday
-	 * @param email_address
-	 * @param phone_number
+	 * @param emailAddress
+	 * @param phoneNumber
 	 */
 	public User(int id,
 				String name,
 				String password,
 				String birthday,
-				String register_date,
-				String email_address,
-				String phone_number) {
+				String registerDate,
+				String emailAddress,
+				String phoneNumber) {
+
+		super("user");
 		this.id = id;
 		this.name = name;
 		this.password = password;
 		this.birthday = birthday;
-		this.register_date = register_date;
-		this.email_address = email_address;
-		this.phone_number = phone_number;
+		this.registerDate = registerDate;
+		this.emailAddress = emailAddress;
+		this.phoneNumber = phoneNumber;
 	}
 
 	static public User selectById(int id) throws SQLException {
@@ -74,31 +77,13 @@ public class User implements Model {
 	}
 
 	@Override
-	public void insert() {
-		try {
-			Context.getDatabaseDriver().getStatement().executeUpdate(String.format("INSERT INTO user" +
-						" (id, name, password, birthday, email_address, phone_number) " +
-							"VALUES ('%d', '%s', '%s', '%s', '%s', '%s');",
-						id,
-						name,
-						password,
-						birthday,
-						email_address,
-						phone_number
-			));
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void update() {
-		// TODO
-	}
-
-	@Override
-	public void remove() {
-		// TODO
+	public Map<String, String> getSubAttributes() {
+		Map<String, String > ret = new HashMap<>();
+		ret.put("name", name);
+		ret.put("password", password);
+		ret.put("birthday", birthday);
+		ret.put("email_address", emailAddress);
+		ret.put("phone_number", phoneNumber);
+		return ret;
 	}
 }
