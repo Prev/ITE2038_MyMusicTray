@@ -77,13 +77,14 @@ public class Album extends StrongTypeModel {
 							"FROM album\n" +
 							"LEFT JOIN album_artists ON album.id = album_artists.album_id\n" +
 							"LEFT JOIN artist ON album_artists.artist_id = artist.id;"*/
-					"SELECT music.*,\n" +
+					"SELECT " +
 							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start,\n" +
-							"album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type \n" +
-						"FROM music\n" +
-						"LEFT JOIN album ON album.id = music.album_id\n" +
-						"LEFT JOIN album_artists ON music.album_id = album_artists.album_id\n" +
-						"LEFT JOIN artist ON album_artists.artist_id = artist.id;\n"
+							"album.id AS album_id, album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type \n," +
+							"music.*\n" +
+						"FROM album\n" +
+						"LEFT JOIN album_artists ON album_artists.album_id = album.id\n" +
+						"LEFT JOIN artist ON artist.id = album_artists.artist_id\n" +
+						"LEFT JOIN music ON music.album_id = album.id;\n"
 			);
 
 			while (rs.next()) {
@@ -193,52 +194,5 @@ public class Album extends StrongTypeModel {
 		ret.put("release_date", releaseDate);
 		ret.put("type", Integer.toString(type));
 		return ret;
-	}
-
-	@Override
-	public void insert() {
-		if (this.id != -1) {
-			throw new ModelMisuseException(ModelMisuseException.INSERT_MISUSE);
-		}
-		try {
-			PreparedStatement stmt = Context.getConnection().prepareStatement(
-					"INSERT INTO album (title, release_date, type) values(?, ?, ?);",
-					Statement.RETURN_GENERATED_KEYS
-			);
-			stmt.setString(1, this.title);
-			stmt.setString(2, this.releaseDate);
-			stmt.setInt(3, this.type);
-			stmt.executeUpdate();
-
-			ResultSet rs = stmt.getGeneratedKeys();
-			rs.next();
-			this.id = rs.getInt(1); // Auto-incremented value
-
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void update() {
-		// TODO
-	}
-
-	@Override
-	public void remove() {
-		if (this.id == -1) {
-			throw new ModelMisuseException(ModelMisuseException.REMOVE_MISUSE);
-		}
-		try {
-			PreparedStatement stmt = Context.getConnection().prepareStatement(
-					"DELETE FROM `album` WHERE `id` = ?"
-			);
-			stmt.setInt(1, this.id);
-			stmt.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 }

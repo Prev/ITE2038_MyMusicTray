@@ -49,6 +49,7 @@ public class AlbumManageActivity extends MenuActivity {
 				"Add artist to this album",
 				"Add music in this album",
 				"Remove music in this album",
+				"[Warning] Remove this album",
 		};
 	}
 
@@ -105,8 +106,12 @@ public class AlbumManageActivity extends MenuActivity {
 				if (!removed) {
 					System.err.println("Cannot find music by id '" + musicId + "'");
 				}
-
 				break;
+
+			case 4:
+				this.model.remove();
+				IOUtil.printPopup("Album '" + this.model.title + "' is removed");
+				return;
 		}
 
 		this.start();

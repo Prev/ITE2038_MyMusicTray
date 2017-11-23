@@ -37,6 +37,8 @@ public class Music extends StrongTypeModel {
 	 * @return Music instance
 	 */
 	static public Music that(int id, String title, Album album, int trackNo) {
+		if (id == 0) return null;
+
 		if (repository.containsKey(id))
 			return repository.get(id);
 		else {
@@ -57,18 +59,18 @@ public class Music extends StrongTypeModel {
 			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
 					/*"SELECT music.*," +
 								"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start," +
-								"album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type " +
+								"album.id AS album_id, album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type " +
 						"FROM music, artist, album, album_artists\n" +
 						"WHERE music.album_id = album.id\n" +
 						"AND album_artists.album_id = album.id\n" +
 						"AND album_artists.artist_id = artist.id"*/
 					"SELECT music.*,\n" +
 							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start,\n" +
-							"album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type \n" +
+							"album.id AS album_id, album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type \n" +
 						"FROM music\n" +
-						"LEFT JOIN album ON album.id = music.album_id\n" +
-						"LEFT JOIN album_artists ON music.album_id = album_artists.album_id\n" +
-						"LEFT JOIN artist ON album_artists.artist_id = artist.id;\n"
+						"LEFT JOIN album ON music.album_id = album.id\n" +
+						"LEFT JOIN album_artists ON album_artists.album_id = music.album_id\n" +
+						"LEFT JOIN artist ON artist.id = album_artists.artist_id;\n"
 			);
 
 			while (rs.next()) {

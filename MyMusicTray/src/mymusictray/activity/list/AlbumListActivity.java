@@ -41,7 +41,7 @@ public class AlbumListActivity extends Activity {
 		System.out.println("");
 
 		if (adminInstance != null) {
-			(new ListSelectingActivity(this, Album.getAllAlbums())).start();
+			(new ListSelectingActivity(this.previousActivity, Album.getAllAlbums())).start();
 		}
 	}
 
