@@ -32,6 +32,8 @@ public class AdminRootActivity extends MenuActivity {
 
 	@Override
 	public void operate(int choice) {
+		// TODO: remove artist
+
 		switch (choice) {
 			case 1 :
 				// View Music List
@@ -76,10 +78,6 @@ public class AdminRootActivity extends MenuActivity {
 				// Go home
 				this.previousActivity.start();
 				return;
-
-			default :
-				// TODO
-				System.err.println("Currently unsupported");
 
 		}
 

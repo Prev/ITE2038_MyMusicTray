@@ -34,7 +34,7 @@ public class LoginFailedActivity extends MenuActivity {
 
 	@Override
 	public void operate(int choice) {
-		(new RootActivity()).start();
+		// Do nothing -> then go back to RootActivity
 	}
 
 }

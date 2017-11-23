@@ -1,6 +1,8 @@
 package mymusictray.activity;
 
 import mymusictray.activity.auth.AdminLoginActivity;
+import mymusictray.activity.auth.UserLoginActivity;
+import mymusictray.activity.auth.UserSignupActivity;
 
 public class RootActivity extends MenuActivity {
 
@@ -28,16 +30,14 @@ public class RootActivity extends MenuActivity {
 				break;
 
 			case 2 :
-				// TODO
-				System.err.println("Currently unsupported");
-				start();
+				(new UserLoginActivity(this)).start();
 				break;
 
 			case 3 :
-				// TODO
-				System.err.println("Currently unsupported");
-				start();
+				(new UserSignupActivity(this)).start();
 				break;
 		}
+
+		start();
 	}
 }
