@@ -164,6 +164,19 @@ public class Music implements Model {
 
 	@Override
 	public void remove() {
-		// TODO
+		if (this.id == -1) {
+			throw new ModelMisuseException(ModelMisuseException.REMOVE_MISUSE);
+		}
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement(
+					"DELETE FROM `music` WHERE `id` = ?"
+			);
+			stmt.setInt(1, this.id);
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 }

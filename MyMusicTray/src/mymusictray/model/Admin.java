@@ -121,7 +121,7 @@ public class Admin implements Model {
 			stmt.setString(1, this.accountId);
 			stmt.setString(2, this.password);
 			stmt.setString(3, this.name);
-			stmt.setString(4, Integer.toString(this.id));
+			stmt.setInt(4, this.id);
 			stmt.executeUpdate();
 
 		} catch (SQLException e) {
@@ -134,12 +134,11 @@ public class Admin implements Model {
 		if (this.id == -1) {
 			throw new ModelMisuseException(ModelMisuseException.REMOVE_MISUSE);
 		}
-
 		try {
 			PreparedStatement stmt = Context.getConnection().prepareStatement(
 					"DELETE FROM admin WHERE id = ?;"
 			);
-			stmt.setString(1, Integer.toString(this.id));
+			stmt.setInt(1, this.id);
 			stmt.executeUpdate();
 
 		} catch (SQLException e) {

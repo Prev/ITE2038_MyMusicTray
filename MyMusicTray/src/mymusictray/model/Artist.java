@@ -2,6 +2,7 @@ package mymusictray.model;
 
 import mymusictray.core.Context;
 import mymusictray.exception.ModelMisuseException;
+import mymusictray.exception.NotFoundException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -76,6 +77,26 @@ public class Artist implements Model {
 	}
 
 
+	static public Artist selectById(int id) {
+		try {
+			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery("SELECT * FROM artist WHERE id = '"+id+"';");
+
+			if (!rs.next())
+				throw new NotFoundException("Cannot find artist by id '"+id+"'");
+
+			return new Artist(
+					rs.getInt("id"),
+					rs.getString("name"),
+					rs.getString("activity_start_date")
+			);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
+
 	public int id;
 	public String name;
 	public String activityStartDate;
@@ -113,6 +134,20 @@ public class Artist implements Model {
 			rs.next();
 			this.id = rs.getInt(1); // Auto-incremented value
 
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void addRelationWithAlbum(Album album) {
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement("INSERT INTO `album_artists`(`album_id`, `artist_id`) VALUES (?, ?)");
+			stmt.setInt(1, album.id);
+			stmt.setInt(2, this.id);
+			stmt.executeUpdate();
+
+			album.artists.add(this);
 
 		} catch (SQLException e) {
 			e.printStackTrace();

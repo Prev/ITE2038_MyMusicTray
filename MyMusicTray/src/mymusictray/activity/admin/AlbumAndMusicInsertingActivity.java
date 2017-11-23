@@ -1,7 +1,9 @@
 package mymusictray.activity.admin;
 
 import mymusictray.activity.Activity;
+import mymusictray.exception.NotFoundException;
 import mymusictray.model.Album;
+import mymusictray.model.Artist;
 import mymusictray.util.IOUtil;
 
 public class AlbumAndMusicInsertingActivity extends Activity {
@@ -12,7 +14,18 @@ public class AlbumAndMusicInsertingActivity extends Activity {
 
 	@Override
 	public void start() {
-		IOUtil.printSection("[Add New Album and Music");
+		IOUtil.printSection("[Add New Album and Music]");
+
+		int artistId = IOUtil.inputNatural("Input artist id");
+		Artist artist;
+
+		try {
+			artist = Artist.selectById(artistId);
+
+		}catch (NotFoundException e) {
+			System.err.println("Cannot find artist by id '" + artistId + "'. Return to menu.");
+			return;
+		}
 
 		String name = IOUtil.inputLine("Input title of album");
 		String releaseDate = IOUtil.inputDateString("Input release date of album (yyyy-MM-dd)");
@@ -27,9 +40,11 @@ public class AlbumAndMusicInsertingActivity extends Activity {
 		Album model = new Album(name, releaseDate, type);
 		model.insert();
 
+		artist.addRelationWithAlbum(model);
+
 		IOUtil.printPopup("New Album is created successfully", "Start managing this album");
 
-		(new AlbumManageActivity(this, model)).start();
+		(new AlbumManageActivity(this.previousActivity, model)).start();
 
 	}
 }

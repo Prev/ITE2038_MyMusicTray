@@ -3,6 +3,7 @@ package mymusictray.activity.list;
 import mymusictray.activity.Activity;
 import mymusictray.activity.MenuActivity;
 import mymusictray.activity.admin.AlbumManageActivity;
+import mymusictray.model.Admin;
 import mymusictray.model.Album;
 import mymusictray.util.IOUtil;
 
@@ -10,8 +11,15 @@ import java.util.List;
 
 public class AlbumListActivity extends Activity {
 
+	private Admin adminInstance = null;
+
 	public AlbumListActivity(Activity previousActivity) {
 		super(previousActivity);
+	}
+
+	public AlbumListActivity(Activity previousActivity, Admin admin) {
+		super(previousActivity);
+		this.adminInstance = admin;
 	}
 
 	@Override
@@ -31,16 +39,15 @@ public class AlbumListActivity extends Activity {
 			);
 		}
 		System.out.println("");
+
+		if (adminInstance != null) {
+			(new ListSelectingActivity(this, Album.getAllAlbums())).start();
+		}
 	}
 
-	public void startWithManaging() {
-		this.start();
 
-		(new ListSelectingActivity(this, Album.getAllAlbums())).start();
-	}
 
 	class ListSelectingActivity extends MenuActivity{
-
 		private List<Album> albums;
 
 		public ListSelectingActivity(Activity previousActivity, List<Album> albums) {

@@ -45,7 +45,7 @@ public class AdminRootActivity extends MenuActivity {
 
 			case 3:
 				// View Album List
-				(new AlbumListActivity(this)).startWithManaging();
+				(new AlbumListActivity(this, this.model)).start();
 
 				break;
 

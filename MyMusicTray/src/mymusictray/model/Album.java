@@ -71,19 +71,27 @@ public class Album implements Model {
 						"FROM album, artist, album_artists\n" +
 						"WHERE album_artists.album_id = album.id\n" +
 						"AND album_artists.artist_id = artist.id"*/
-					"SELECT album.*," +
+					/*"SELECT album.*," +
 							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start\n" +
-						"FROM album\n" +
-						"LEFT JOIN album_artists ON album.id = album_artists.album_id\n" +
-						"LEFT JOIN artist ON album_artists.artist_id = artist.id;"
+
+							"FROM album\n" +
+							"LEFT JOIN album_artists ON album.id = album_artists.album_id\n" +
+							"LEFT JOIN artist ON album_artists.artist_id = artist.id;"*/
+					"SELECT music.*,\n" +
+							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start,\n" +
+							"album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type \n" +
+						"FROM music\n" +
+						"LEFT JOIN album ON album.id = music.album_id\n" +
+						"LEFT JOIN album_artists ON music.album_id = album_artists.album_id\n" +
+						"LEFT JOIN artist ON album_artists.artist_id = artist.id;\n"
 			);
 
 			while (rs.next()) {
 				Album albumModel = Album.that(
-						rs.getInt("id"),
-						rs.getString("title"),
-						rs.getString("release_date"),
-						rs.getInt("type")
+						rs.getInt("album_id"),
+						rs.getString("album_title"),
+						rs.getString("album_release_date"),
+						rs.getInt("album_type")
 				);
 				Artist artistModel = Artist.that(
 						rs.getInt("artist_id"),
@@ -93,6 +101,14 @@ public class Album implements Model {
 
 				if (!albumModel.artists.contains(artistModel))
 					albumModel.artists.add(artistModel);
+
+				Music.that(
+						rs.getInt("id"),
+						rs.getString("title"),
+						albumModel,
+						rs.getInt("track_no")
+				);
+				// Add music to album
 
 				albumDict.put(albumModel.id, albumModel);
 			}

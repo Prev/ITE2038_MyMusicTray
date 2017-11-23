@@ -202,6 +202,7 @@ public class IOUtil {
 			}
 		}
 
+		Context.getScanner().nextLine();
 		return value;
 	}
 

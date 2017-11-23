@@ -2,6 +2,7 @@ package mymusictray.activity.admin;
 
 import mymusictray.activity.Activity;
 import mymusictray.activity.MenuActivity;
+import mymusictray.exception.NotFoundException;
 import mymusictray.model.Album;
 import mymusictray.model.Artist;
 import mymusictray.model.Music;
@@ -12,7 +13,6 @@ public class AlbumManageActivity extends MenuActivity {
 	private Album model;
 
 	public AlbumManageActivity(Activity previousActivity, Album model) {
-		//super(previousActivity, "Album Management <" + model.title + ">");
 		super(previousActivity);
 		this.model = model;
 	}
@@ -35,7 +35,7 @@ public class AlbumManageActivity extends MenuActivity {
 
 		System.out.println("Musics:");
 		for (Music m: this.model.musics)
-			System.out.printf("\t %2d %s (id=%d)\n", m.trackNo, m.title, m.id);
+			System.out.printf("\t\t%d. %s (id=%d)\n", m.trackNo, m.title, m.id);
 
 
 		System.out.println("\n");
@@ -47,8 +47,6 @@ public class AlbumManageActivity extends MenuActivity {
 	public String[] getMenu() {
 		return new String[] {
 				"Add artist to this album",
-				"Remove artist in this album",
-
 				"Add music in this album",
 				"Remove music in this album",
 		};
@@ -57,7 +55,24 @@ public class AlbumManageActivity extends MenuActivity {
 	@Override
 	public void operate(int choice) {
 		switch (choice) {
-			case 3:
+			case 1:
+				// Add artist to this album
+				IOUtil.printSection("Add new music to this album", '-');
+
+				int artistId = IOUtil.inputNatural("Input artist id");
+
+				try {
+					Artist artist = Artist.selectById(artistId);
+					artist.addRelationWithAlbum(this.model);
+
+				}catch (NotFoundException e) {
+					System.err.println("Cannot find artist by id '" + artistId + "'");
+					break;
+				}
+
+				break;
+
+			case 2:
 				// Add music in this album
 				IOUtil.printSection("Add new music to this album", '-');
 
@@ -70,9 +85,27 @@ public class AlbumManageActivity extends MenuActivity {
 				IOUtil.printPopup("New music is inserted");
 				break;
 
-			default:
-				// TODO
-				System.err.println("Currently Unsupported Feature");
+			case 3:
+				// Remove music in this album
+				IOUtil.printSection("Remove music in this album", '-');
+
+				int musicId = IOUtil.inputNatural("Input music id");
+				boolean removed = false;
+				for (Music m: this.model.musics){
+					if (m.id == musicId) {
+						m.remove();
+						this.model.musics.remove(m);
+						removed = true;
+
+						IOUtil.printPopup("Music '" + m.title + "' is removed");
+						break;
+					}
+				}
+
+				if (!removed) {
+					System.err.println("Cannot find music by id '" + musicId + "'");
+				}
+
 				break;
 		}
 
