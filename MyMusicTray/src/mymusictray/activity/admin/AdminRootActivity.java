@@ -32,7 +32,7 @@ public class AdminRootActivity extends MenuActivity {
 
 	@Override
 	public void operate(int choice) {
-		// TODO: remove artist
+		// TODO: remove artist,
 
 		switch (choice) {
 			case 1 :
@@ -74,10 +74,7 @@ public class AdminRootActivity extends MenuActivity {
 			case 8:
 				// Remove this account
 				(new RemoveAdminActivity(this, this.model)).start();
-
-				// Go home
-				this.previousActivity.start();
-				return;
+				return; // Go home
 
 		}
 

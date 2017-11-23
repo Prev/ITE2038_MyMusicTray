@@ -225,7 +225,7 @@ public class IOUtil {
 				date = null;
 
 		} catch (ParseException ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 		}
 
 		if (date == null) {
