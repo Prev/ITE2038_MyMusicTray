@@ -1,6 +1,7 @@
 package mymusictray.activity.list;
 
 import mymusictray.activity.Activity;
+import mymusictray.activity.user.PlayListManageActivity;
 import mymusictray.model.PlayList;
 import mymusictray.model.User;
 import mymusictray.util.IOUtil;
@@ -33,8 +34,7 @@ public class PlayListListActivity extends Activity {
 		(new ListSelectingActivity<PlayList>(this.previousActivity, PlayList.getAllPlaylists(user)) {
 			@Override
 			public void operate(PlayList model) {
-				// TODO
-				System.err.println("Currently unsupported feature");
+				(new PlayListManageActivity(this, PlayList.getPlayListById(model.id))).start();
 			}
 		}).start();
 	}

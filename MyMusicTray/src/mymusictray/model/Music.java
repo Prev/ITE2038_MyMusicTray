@@ -1,6 +1,7 @@
 package mymusictray.model;
 
 import mymusictray.core.Context;
+import mymusictray.exception.NotFoundException;
 
 import java.sql.*;
 import java.util.*;
@@ -49,28 +50,24 @@ public class Music extends StrongTypeModel implements ListableModel {
 	}
 
 	/**
-	 * Get all musics in database with album and artist
+	 * Get music, album of music, and artists of album with JOIN statement.
+	 *
+	 * @param condition: Additional condition of query.
 	 * @return List of Music instance
 	 */
-	public static List<Music> getAllMusics() {
+	public static List<Music> getMusics(String condition) {
 		Map<Integer, Music> musicDict = new HashMap<>();
 
 		try {
 			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
-					/*"SELECT music.*," +
-								"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start," +
-								"album.id AS album_id, album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type " +
-						"FROM music, artist, album, album_artists\n" +
-						"WHERE music.album_id = album.id\n" +
-						"AND album_artists.album_id = album.id\n" +
-						"AND album_artists.artist_id = artist.id"*/
 					"SELECT music.*,\n" +
 							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start,\n" +
 							"album.id AS album_id, album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type \n" +
 						"FROM music\n" +
 						"LEFT JOIN album ON music.album_id = album.id\n" +
 						"LEFT JOIN album_artists ON album_artists.album_id = music.album_id\n" +
-						"LEFT JOIN artist ON artist.id = album_artists.artist_id;\n"
+						"LEFT JOIN artist ON artist.id = album_artists.artist_id\n" +
+						condition + ";"
 			);
 
 			while (rs.next()) {
@@ -104,6 +101,29 @@ public class Music extends StrongTypeModel implements ListableModel {
 		}
 
 		return new ArrayList<>(musicDict.values());
+	}
+
+	/**
+	 * Get all musics in database with album and artist
+	 * @return List of Music instance
+	 */
+	public static List<Music> getAllMusics() {
+		return getMusics("");
+	}
+
+	/**
+	 * Get one music by id
+	 *
+	 * @param id: PK of artist
+	 * @return Music instance
+	 * @throws NotFoundException
+	 */
+	public static Music selectById(int id) {
+		List<Music> list = getMusics("WHERE music.id = '" + id + "'");
+		if (list.size() == 0)
+			throw new NotFoundException("Cannot find artist by id '"+id+"'");
+
+		return list.get(0);
 	}
 
 

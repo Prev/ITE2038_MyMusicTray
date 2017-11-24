@@ -51,14 +51,18 @@ public class Artist extends StrongTypeModel implements ListableModel {
 
 
 	/**
-	 * Get all artists in database
+	 * Get artists in artist table
+	 * @param condition: Additional condition of query.
 	 * @return List of Arist instance
 	 */
-	public static List<Artist> getAllArtists() {
+	public static List<Artist> getArtists(String condition) {
 		List<Artist> ret = new ArrayList<>();
 
 		try {
-			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery("SELECT * FROM `artist`");
+			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
+					"SELECT * FROM `artist`" +
+							condition + ";"
+			);
 
 			while (rs.next()) {
 				ret.add(new Artist(
@@ -75,23 +79,28 @@ public class Artist extends StrongTypeModel implements ListableModel {
 		return ret;
 	}
 
+	/**
+	 * Get all artists in database
+	 * @return List of Arist instance
+	 */
+	public static List<Artist> getAllArtists() {
+		return getArtists("");
+	}
 
+
+	/**
+	 * Select one artist by id
+	 *
+	 * @param id: PK of artist
+	 * @return Artist instance
+	 * @throws NotFoundException
+	 */
 	static public Artist selectById(int id) {
-		try {
-			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery("SELECT * FROM artist WHERE id = '"+id+"';");
+		List<Artist> list = getArtists("WHERE id = '" + id + "'");
+		if (list.size() == 0)
+			throw new NotFoundException("Cannot find artist by id '"+id+"'");
 
-			if (!rs.next())
-				throw new NotFoundException("Cannot find artist by id '"+id+"'");
-
-			return new Artist(
-					rs.getInt("id"),
-					rs.getString("name"),
-					rs.getString("activity_start_date")
-			);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return list.get(0);
 	}
 
 

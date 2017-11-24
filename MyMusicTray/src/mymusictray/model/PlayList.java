@@ -38,7 +38,7 @@ public class PlayList extends StrongTypeModel implements ListableModel {
 		List<PlayList> ret = new ArrayList<>();
 
 		try {
-			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery("" +
+			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
 					"SELECT *, (SELECT COUNT(*) FROM playlist_item WHERE id = playlist.id) AS cnt\n" +
 					"FROM playlist\n" +
 					"WHERE owner = '"+owner.id+"'"
@@ -57,6 +57,41 @@ public class PlayList extends StrongTypeModel implements ListableModel {
 		}
 
 		return ret;
+	}
+
+	public static PlayList getPlayListById(int id) {
+		PlayList model = null;
+		try {
+			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
+					"SELECT playlist.* , music.id AS music_id, music.title AS music_title, music.track_no AS music_track_no\n" +
+							"FROM playlist\n" +
+						"LEFT JOIN playlist_item ON playlist_item.playlist_id = playlist.id\n" +
+						"LEFT JOIN music ON music.id = playlist_item.music_id\n" +
+						"WHERE playlist.id = '"+id+"'"
+			);
+
+			while (rs.next()) {
+				if (model == null) {
+					model = new PlayList(
+							rs.getInt("id"),
+							rs.getString("name"),
+							null,
+							null
+					);
+				}
+				if (rs.getString("music_id") != null) {
+					model.musics.add(new Music(
+							rs.getInt("music_id"),
+							rs.getString("music_title"),
+							null,
+							rs.getInt("music_track_no")
+					));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return model;
 	}
 
 	public String name;
@@ -103,6 +138,45 @@ public class PlayList extends StrongTypeModel implements ListableModel {
 	@Override
 	public String getName() {
 		return this.name;
+	}
+
+
+	/**
+	 * Add relation with music (Add entity in `playlist_item` table)
+	 * @param music: music to add
+	 */
+	public void addRelationWithMusic(Music music) {
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement("INSERT INTO `playlist_item`(`playlist_id`, `music_id`) VALUES (?, ?)");
+			stmt.setInt(1, this.id);
+			stmt.setInt(2, music.id);
+			stmt.executeUpdate();
+
+			if (!this.musics.contains(music))
+				this.musics.add(music);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Remove relation with music (Remove entity in `playlist_item` table)
+	 * @param music: music to remove
+	 */
+	public void removeRelationWithMusic(Music music) {
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement("DELETE FROM `playlist_item` WHERE playlist_id = ? AND music_id = ?");
+			stmt.setInt(1, this.id);
+			stmt.setInt(2, music.id);
+			stmt.executeUpdate();
+
+			if (this.musics.contains(music))
+				this.musics.remove(music);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
 

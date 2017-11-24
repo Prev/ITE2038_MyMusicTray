@@ -71,6 +71,7 @@ public class AlbumManageActivity extends MenuActivity {
 					break;
 				}
 
+				IOUtil.printPopup("New artist is inserted");
 				break;
 
 			case 2:
