@@ -6,10 +6,6 @@ import mymusictray.util.IOUtil;
 
 public class UserSignupActivity extends Activity {
 
-	public UserSignupActivity(Activity previousActivity) {
-		super(previousActivity);
-	}
-
 	@Override
 	public void start() {
 		IOUtil.printSection("Register New Admin", '-');

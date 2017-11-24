@@ -1,6 +1,5 @@
 package mymusictray.activity.admin;
 
-import mymusictray.activity.Activity;
 import mymusictray.activity.MenuActivity;
 import mymusictray.exception.NotFoundException;
 import mymusictray.model.Album;
@@ -12,8 +11,7 @@ public class AlbumManageActivity extends MenuActivity {
 
 	private Album model;
 
-	public AlbumManageActivity(Activity previousActivity, Album model) {
-		super(previousActivity);
+	public AlbumManageActivity(Album model) {
 		this.model = model;
 	}
 

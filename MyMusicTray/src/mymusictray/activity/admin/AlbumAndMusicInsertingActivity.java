@@ -8,10 +8,6 @@ import mymusictray.util.IOUtil;
 
 public class AlbumAndMusicInsertingActivity extends Activity {
 
-	public AlbumAndMusicInsertingActivity(Activity previousActivity) {
-		super(previousActivity);
-	}
-
 	@Override
 	public void start() {
 		IOUtil.printSection("[Add New Album and Music]");
@@ -44,7 +40,7 @@ public class AlbumAndMusicInsertingActivity extends Activity {
 
 		IOUtil.printPopup("New Album is created successfully", "Start managing this album");
 
-		(new AlbumManageActivity(this.previousActivity, model)).start();
+		(new AlbumManageActivity(model)).start();
 
 	}
 }

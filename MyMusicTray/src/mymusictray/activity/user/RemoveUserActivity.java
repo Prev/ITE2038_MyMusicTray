@@ -8,8 +8,7 @@ public class RemoveUserActivity extends Activity {
 
 	private User model;
 
-	public RemoveUserActivity(Activity previousActivity, User model) {
-		super(previousActivity);
+	public RemoveUserActivity(User model) {
 		this.model = model;
 	}
 

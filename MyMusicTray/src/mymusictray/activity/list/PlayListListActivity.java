@@ -10,8 +10,7 @@ public class PlayListListActivity extends Activity {
 
 	private User user;
 
-	public PlayListListActivity(Activity previousActivity, User user) {
-		super(previousActivity);
+	public PlayListListActivity(User user) {
 		this.user = user;
 	}
 
@@ -31,10 +30,13 @@ public class PlayListListActivity extends Activity {
 		}
 		System.out.println("");
 
-		(new ListSelectingActivity<PlayList>(this.previousActivity, PlayList.getAllPlaylists(user)) {
+		PlayListListActivity outerActivity = this;
+
+		(new ListSelectingActivity<PlayList>(PlayList.getAllPlaylists(user)) {
 			@Override
 			public void operate(PlayList model) {
-				(new PlayListManageActivity(this, PlayList.getPlayListById(model.id))).start();
+				(new PlayListManageActivity(PlayList.getPlayListById(model.id))).start();
+				outerActivity.start();
 			}
 		}).start();
 	}

@@ -1,6 +1,5 @@
 package mymusictray.activity.user;
 
-import mymusictray.activity.Activity;
 import mymusictray.activity.MenuActivity;
 import mymusictray.exception.NotFoundException;
 import mymusictray.model.Music;
@@ -11,8 +10,7 @@ public class PlayListManageActivity extends MenuActivity {
 
 	private PlayList model;
 
-	public PlayListManageActivity(Activity previousActivity, PlayList model) {
-		super(previousActivity);
+	public PlayListManageActivity(PlayList model) {
 		this.model = model;
 	}
 

@@ -8,8 +8,7 @@ public class ChangeUserPasswordActivity extends Activity {
 
 	private User model;
 
-	public ChangeUserPasswordActivity(Activity previousActivity, User model) {
-		super(previousActivity);
+	public ChangeUserPasswordActivity(User model) {
 		this.model = model;
 	}
 

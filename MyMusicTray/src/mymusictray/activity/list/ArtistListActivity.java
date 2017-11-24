@@ -5,9 +5,6 @@ import mymusictray.model.Artist;
 import mymusictray.util.IOUtil;
 
 public class ArtistListActivity extends Activity {
-	public ArtistListActivity(Activity previousActivity) {
-		super(previousActivity);
-	}
 
 	@Override
 	public void start() {

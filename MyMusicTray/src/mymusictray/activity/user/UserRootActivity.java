@@ -1,6 +1,5 @@
 package mymusictray.activity.user;
 
-import mymusictray.activity.Activity;
 import mymusictray.activity.MenuActivity;
 import mymusictray.activity.list.AlbumListActivity;
 import mymusictray.activity.list.ArtistListActivity;
@@ -12,8 +11,8 @@ public class UserRootActivity extends MenuActivity {
 
 	private User model;
 
-	public UserRootActivity(Activity previousActivity, User model) {
-		super(previousActivity, "User Menu");
+	public UserRootActivity(User model) {
+		super("User Menu");
 		this.model = model;
 	}
 
@@ -38,36 +37,36 @@ public class UserRootActivity extends MenuActivity {
 		switch (choice) {
 			case 1 :
 				// View Music List
-				(new MusicListActivity(this)).start();
+				(new MusicListActivity()).start();
 				break;
 
 			case 2:
 				// View Artist List
-				(new ArtistListActivity(this)).start();
+				(new ArtistListActivity()).start();
 				break;
 
 			case 3:
 				// View Album List
-				(new AlbumListActivity(this)).start();
+				(new AlbumListActivity()).start();
 				break;
 
 			case 4:
 				// View and manage playlists
-				(new PlayListListActivity(this, this.model)).start();
+				(new PlayListListActivity(this.model)).start();
 				break;
 
 			case 5:
-				(new PlayListInsertingActivity(this, this.model)).start();
+				(new PlayListInsertingActivity(this.model)).start();
 				break;
 
 			case 6:
 				// Change Password
-				(new ChangeUserPasswordActivity(this, this.model)).start();
+				(new ChangeUserPasswordActivity(this.model)).start();
 				break;
 
 			case 7:
 				// Remove this account
-				(new RemoveUserActivity(this, this.model)).start();
+				(new RemoveUserActivity(this.model)).start();
 				return; // Go home
 		}
 
