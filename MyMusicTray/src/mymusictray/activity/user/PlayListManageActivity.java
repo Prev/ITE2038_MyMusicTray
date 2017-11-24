@@ -7,8 +7,6 @@ import mymusictray.model.Music;
 import mymusictray.model.PlayList;
 import mymusictray.util.IOUtil;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
 public class PlayListManageActivity extends MenuActivity {
 
 	private PlayList model;

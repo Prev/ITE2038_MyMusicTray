@@ -57,8 +57,7 @@ public class UserRootActivity extends MenuActivity {
 				break;
 
 			case 5:
-				// TODO
-				System.err.println("Currently Unsupported feature");
+				(new PlayListInsertingActivity(this, this.model)).start();
 				break;
 
 			case 6:
