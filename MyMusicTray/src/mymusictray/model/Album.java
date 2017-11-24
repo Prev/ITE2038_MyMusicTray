@@ -1,7 +1,6 @@
 package mymusictray.model;
 
 import mymusictray.core.Context;
-import mymusictray.exception.ModelMisuseException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Album extends StrongTypeModel {
+public class Album extends StrongTypeModel implements ListableModel {
 
 	static public void initTable() throws SQLException {
 		Statement stmt = Context.getDatabaseDriver().getStatement();
@@ -194,5 +193,15 @@ public class Album extends StrongTypeModel {
 		ret.put("release_date", releaseDate);
 		ret.put("type", Integer.toString(type));
 		return ret;
+	}
+
+	@Override
+	public int getID() {
+		return this.id;
+	}
+
+	@Override
+	public String getName() {
+		return this.title;
 	}
 }

@@ -5,7 +5,7 @@ import mymusictray.core.Context;
 import java.sql.*;
 import java.util.*;
 
-public class Music extends StrongTypeModel {
+public class Music extends StrongTypeModel implements ListableModel {
 
 	static public void initTable() throws SQLException {
 		Statement stmt = Context.getDatabaseDriver().getStatement();
@@ -141,5 +141,15 @@ public class Music extends StrongTypeModel {
 		ret.put("album_id", Integer.toString(album.id));
 		ret.put("track_no", Integer.toString(trackNo));
 		return ret;
+	}
+
+	@Override
+	public int getID() {
+		return this.id;
+	}
+
+	@Override
+	public String getName() {
+		return this.title;
 	}
 }

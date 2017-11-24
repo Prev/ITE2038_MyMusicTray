@@ -1,13 +1,12 @@
 package mymusictray.activity.list;
 
 import mymusictray.activity.Activity;
-import mymusictray.activity.MenuActivity;
 import mymusictray.activity.admin.AlbumManageActivity;
 import mymusictray.model.Admin;
 import mymusictray.model.Album;
+import mymusictray.model.ListableModel;
 import mymusictray.util.IOUtil;
 
-import java.util.List;
 
 public class AlbumListActivity extends Activity {
 
@@ -41,37 +40,13 @@ public class AlbumListActivity extends Activity {
 		System.out.println("");
 
 		if (adminInstance != null) {
-			(new ListSelectingActivity(this.previousActivity, Album.getAllAlbums())).start();
+			(new ListSelectingActivity<Album>(this.previousActivity, Album.getAllAlbums()) {
+				@Override
+				public void operate(Album model) {
+					(new AlbumManageActivity(this, model)).start();
+				}
+			}).start();
 		}
 	}
 
-
-
-	class ListSelectingActivity extends MenuActivity{
-		private List<Album> albums;
-
-		public ListSelectingActivity(Activity previousActivity, List<Album> albums) {
-			super(previousActivity);
-			this.albums = albums;
-		}
-
-		@Override
-		public String getFirstMenuTitle() { return "Close List"; }
-
-		@Override
-		public String[] getMenu() {
-			String[] ret = new String[albums.size()];
-			for (int i = 0; i < albums.size(); i++)
-				ret[i] = "Manage '" + (albums.get(i).title) + "'";
-			return ret;
-		}
-
-		@Override
-		public void operate(int choice) {
-			(new AlbumManageActivity(
-					this.previousActivity,
-					this.albums.get(choice-1)
-			)).start();
-		}
-	}
 }

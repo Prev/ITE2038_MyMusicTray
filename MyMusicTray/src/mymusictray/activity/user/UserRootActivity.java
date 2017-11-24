@@ -5,6 +5,7 @@ import mymusictray.activity.MenuActivity;
 import mymusictray.activity.list.AlbumListActivity;
 import mymusictray.activity.list.ArtistListActivity;
 import mymusictray.activity.list.MusicListActivity;
+import mymusictray.activity.list.PlayListListActivity;
 import mymusictray.model.User;
 
 public class UserRootActivity extends MenuActivity {
@@ -50,6 +51,16 @@ public class UserRootActivity extends MenuActivity {
 				(new AlbumListActivity(this)).start();
 				break;
 
+			case 4:
+				// View and manage playlists
+				(new PlayListListActivity(this, this.model)).start();
+				break;
+
+			case 5:
+				// TODO
+				System.err.println("Currently Unsupported feature");
+				break;
+
 			case 6:
 				// Change Password
 				(new ChangeUserPasswordActivity(this, this.model)).start();
@@ -59,9 +70,6 @@ public class UserRootActivity extends MenuActivity {
 				// Remove this account
 				(new RemoveUserActivity(this, this.model)).start();
 				return; // Go home
-
-			default :
-				System.err.println("Currently Unsupported feature");
 		}
 
 		start();

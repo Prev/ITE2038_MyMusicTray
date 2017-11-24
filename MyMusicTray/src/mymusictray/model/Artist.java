@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Artist extends StrongTypeModel {
+public class Artist extends StrongTypeModel implements ListableModel {
 
 	static public void initTable() throws SQLException {
 		Statement stmt = Context.getDatabaseDriver().getStatement();
@@ -136,5 +136,15 @@ public class Artist extends StrongTypeModel {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public int getID() {
+		return this.id;
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
 	}
 }
