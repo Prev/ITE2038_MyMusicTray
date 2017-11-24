@@ -37,10 +37,12 @@ abstract public class MenuActivity extends Activity {
 		combinedMenu[0] = this.getFirstMenuTitle();
 
 		int input = IOUtil.openChoices(combinedMenu,true);
+
 		if (input != 0) {
 			// Operate with choice
 			this.operate(input);
-		}
+		}else
+			this.finish();
 	}
 
 	/**
@@ -60,8 +62,15 @@ abstract public class MenuActivity extends Activity {
 	abstract public String[] getMenu();
 
 	/**
-	 * Operation of acting.
+	 * Operation on selecting right choice
 	 * @param choice: index of chosen menu
 	 */
 	abstract public void operate(int choice);
+
+	/**
+	 * Operation on close (= input zero)
+	 */
+	public void finish() {
+
+	}
 }
