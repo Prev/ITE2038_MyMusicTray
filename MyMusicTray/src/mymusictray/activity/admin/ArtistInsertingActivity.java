@@ -6,10 +6,6 @@ import mymusictray.util.IOUtil;
 
 public class ArtistInsertingActivity extends Activity {
 
-	public ArtistInsertingActivity(Activity previousActivity) {
-		super(previousActivity);
-	}
-
 	@Override
 	public void start() {
 		IOUtil.printSection("[Add New Artist]");

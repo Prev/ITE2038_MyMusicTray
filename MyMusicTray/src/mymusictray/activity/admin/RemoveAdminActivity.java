@@ -8,8 +8,7 @@ public class RemoveAdminActivity extends Activity {
 
 	private Admin model;
 
-	public RemoveAdminActivity(Activity previousActivity, Admin model) {
-		super(previousActivity);
+	public RemoveAdminActivity(Admin model) {
 		this.model = model;
 	}
 

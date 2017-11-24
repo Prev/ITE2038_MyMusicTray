@@ -10,7 +10,12 @@ public class RootActivity extends MenuActivity {
 	 * RootActivity Constructor
 	 */
 	public RootActivity() {
-		super(null, "Home");
+		super("Home");
+	}
+
+	@Override
+	public String getFirstMenuTitle() {
+		return "Exit Program";
 	}
 
 	@Override
@@ -26,15 +31,15 @@ public class RootActivity extends MenuActivity {
 	public void operate(int choice) {
 		switch (choice) {
 			case 1 :
-				(new AdminLoginActivity(this)).start();
+				(new AdminLoginActivity()).start();
 				break;
 
 			case 2 :
-				(new UserLoginActivity(this)).start();
+				(new UserLoginActivity()).start();
 				break;
 
 			case 3 :
-				(new UserSignupActivity(this)).start();
+				(new UserSignupActivity()).start();
 				break;
 		}
 

@@ -2,18 +2,13 @@ package mymusictray.activity;
 
 abstract public class Activity {
 
-	protected Activity previousActivity;
-
 	/**
 	 * Activity Constructor
-	 * @param previousActivity : Previous mymusictray.activity that calls current mymusictray.activity
 	 */
-	public Activity(Activity previousActivity) {
-		this.previousActivity = previousActivity;
-	}
+	public Activity() { }
 
 	/**
-	 * Start mymusictray.activity.
+	 * Start activity.
 	 */
 	abstract public void start();
 }

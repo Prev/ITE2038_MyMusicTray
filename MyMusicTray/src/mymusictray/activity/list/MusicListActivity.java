@@ -6,10 +6,6 @@ import mymusictray.util.IOUtil;
 
 public class MusicListActivity extends Activity {
 
-	public MusicListActivity(Activity previousActivity) {
-		super(previousActivity);
-	}
-
 	@Override
 	public void start() {
 		IOUtil.printSection("View Music List", '-');

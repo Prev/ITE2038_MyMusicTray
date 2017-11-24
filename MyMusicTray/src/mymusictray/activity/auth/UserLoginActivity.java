@@ -8,10 +8,6 @@ import mymusictray.util.IOUtil;
 
 public class UserLoginActivity extends Activity {
 
-	public UserLoginActivity(Activity previousActivity) {
-		super(previousActivity);
-	}
-
 	@Override
 	public void start() {
 		IOUtil.printSection("[User Login]");
@@ -26,21 +22,14 @@ public class UserLoginActivity extends Activity {
 			if (model.password.equals(password)) {
 				IOUtil.printPopup("Login Succeed", "Hello " + model.name);
 
-				// Root Activity is previous one
-				(new UserRootActivity(this.previousActivity, model)).start();
+				(new UserRootActivity(model)).start();
 
 			}else {
-				(new LoginFailedActivity(
-						this,
-						"Id and password are not matched"
-				)).start();
+				(new LoginFailedActivity("Id and password are not matched")).start();
 			}
 
 		}catch (NotFoundException e) {
-			(new LoginFailedActivity(
-					this,
-					"Account not exists"
-			)).start();
+			(new LoginFailedActivity("Account not exists")).start();
 		}
 	}
 }

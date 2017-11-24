@@ -1,6 +1,5 @@
 package mymusictray.activity.list;
 
-import mymusictray.activity.Activity;
 import mymusictray.activity.MenuActivity;
 import mymusictray.model.ListableModel;
 
@@ -9,8 +8,7 @@ import java.util.List;
 public abstract class ListSelectingActivity<T extends ListableModel> extends MenuActivity {
 	private List<T> models;
 
-	public ListSelectingActivity(Activity previousActivity, List<T> models) {
-		super(previousActivity);
+	public ListSelectingActivity(List<T> models) {
 		this.models = models;
 	}
 

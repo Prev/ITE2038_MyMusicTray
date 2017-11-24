@@ -9,8 +9,7 @@ public class PlayListInsertingActivity extends Activity {
 
 	private User userModel;
 
-	public PlayListInsertingActivity(Activity previousActivity, User model) {
-		super(previousActivity);
+	public PlayListInsertingActivity(User model) {
 		this.userModel = model;
 	}
 
@@ -24,6 +23,6 @@ public class PlayListInsertingActivity extends Activity {
 		model.insert();
 		IOUtil.printPopup("New Playlist is created successfully", "Start managing this playlist");
 
-		(new PlayListManageActivity(this.previousActivity, model)).start();
+		(new PlayListManageActivity(model)).start();
 	}
 }

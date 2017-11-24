@@ -4,7 +4,6 @@ import mymusictray.activity.Activity;
 import mymusictray.activity.admin.AlbumManageActivity;
 import mymusictray.model.Admin;
 import mymusictray.model.Album;
-import mymusictray.model.ListableModel;
 import mymusictray.util.IOUtil;
 
 
@@ -12,12 +11,9 @@ public class AlbumListActivity extends Activity {
 
 	private Admin adminInstance = null;
 
-	public AlbumListActivity(Activity previousActivity) {
-		super(previousActivity);
-	}
+	public AlbumListActivity() {}
 
-	public AlbumListActivity(Activity previousActivity, Admin admin) {
-		super(previousActivity);
+	public AlbumListActivity(Admin admin) {
 		this.adminInstance = admin;
 	}
 
@@ -38,12 +34,14 @@ public class AlbumListActivity extends Activity {
 			);
 		}
 		System.out.println("");
+		AlbumListActivity outerActivity = this;
 
 		if (adminInstance != null) {
-			(new ListSelectingActivity<Album>(this.previousActivity, Album.getAllAlbums()) {
+			(new ListSelectingActivity<Album>(Album.getAllAlbums()) {
 				@Override
 				public void operate(Album model) {
-					(new AlbumManageActivity(this, model)).start();
+					(new AlbumManageActivity(model)).start();
+					outerActivity.start();
 				}
 			}).start();
 		}

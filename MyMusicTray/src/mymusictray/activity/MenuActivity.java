@@ -8,20 +8,15 @@ abstract public class MenuActivity extends Activity {
 
 	/**
 	 * Activity Constructor
-	 *
-	 * @param previousActivity : Previous mymusictray.activity that calls current mymusictray.activity
 	 */
-	public MenuActivity(Activity previousActivity) {
-		super(previousActivity);
-	}
+	public MenuActivity() {}
 
 	/**
 	 * Activity Constructor with title
 	 *
-	 * @param previousActivity : Previous mymusictray.activity that calls current mymusictray.activity
+	 * @param title : Title of menu activity
 	 */
-	public MenuActivity(Activity previousActivity, String title) {
-		super(previousActivity);
+	public MenuActivity(String title) {
 		this.title = title;
 	}
 
@@ -42,16 +37,7 @@ abstract public class MenuActivity extends Activity {
 		combinedMenu[0] = this.getFirstMenuTitle();
 
 		int input = IOUtil.openChoices(combinedMenu,true);
-		if (input == 0) {
-			if (this.previousActivity == null) {
-				// If previousActivity is null, exit program (=root)
-				System.exit(-1);
-			}else {
-				// Generally go to previous mymusictray.activity
-				this.previousActivity.start();
-			}
-
-		}else {
+		if (input != 0) {
 			// Operate with choice
 			this.operate(input);
 		}
@@ -64,10 +50,7 @@ abstract public class MenuActivity extends Activity {
 	 * @return title
 	 */
 	public String getFirstMenuTitle() {
-		if (this.previousActivity != null)
-			return "Return to Previous menu";
-		else
-			return "Exit";
+		return "Return to Previous menu";
 	}
 
 	/**
