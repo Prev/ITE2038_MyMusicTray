@@ -163,6 +163,8 @@ public class Album extends StrongTypeModel implements ListableModel {
 
 		this.artists = new ArrayList<>();
 		this.musics = new ArrayList<>();
+
+		// TODO: genre
 	}
 
 	public Album(String title,

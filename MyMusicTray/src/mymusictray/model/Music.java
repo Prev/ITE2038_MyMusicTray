@@ -145,6 +145,8 @@ public class Music extends StrongTypeModel implements ListableModel {
 		if (this.album != null && !this.album.musics.contains(this))
 			this.album.musics.add(this);
 
+		// TODO: genre
+
 	}
 
 	public Music(String title,
