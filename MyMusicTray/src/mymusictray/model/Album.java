@@ -65,25 +65,15 @@ public class Album extends StrongTypeModel implements ListableModel {
 
 		try {
 			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
-					/*"SELECT album.*, \n" +
-							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start\n" +
-						"FROM album, artist, album_artists\n" +
-						"WHERE album_artists.album_id = album.id\n" +
-						"AND album_artists.artist_id = artist.id"*/
-					/*"SELECT album.*," +
-							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start\n" +
-
-							"FROM album\n" +
-							"LEFT JOIN album_artists ON album.id = album_artists.album_id\n" +
-							"LEFT JOIN artist ON album_artists.artist_id = artist.id;"*/
 					"SELECT " +
 							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start,\n" +
 							"album.id AS album_id, album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type \n," +
-							"music.*\n" +
+							"music.*, music_genre.genre\n" +
 						"FROM album\n" +
 						"LEFT JOIN album_artists ON album_artists.album_id = album.id\n" +
 						"LEFT JOIN artist ON artist.id = album_artists.artist_id\n" +
-						"LEFT JOIN music ON music.album_id = album.id;\n"
+						"LEFT JOIN music ON music.album_id = album.id\n" +
+						"LEFT JOIN music_genre ON music_genre.music_id = music.id;\n"
 			);
 
 			while (rs.next()) {
@@ -102,14 +92,20 @@ public class Album extends StrongTypeModel implements ListableModel {
 				if (!albumModel.artists.contains(artistModel))
 					albumModel.artists.add(artistModel);
 
-				Music.that(
+				Music musicModel = Music.that(
 						rs.getInt("id"),
 						rs.getString("title"),
 						albumModel,
-						rs.getInt("track_no")
+						rs.getInt("track_no"),
+						null
 				);
-				// Add music to album
 
+				// Add genre if not null
+				String genre = rs.getString("genre");
+				if (genre != null)
+					musicModel.genre.add(genre);
+
+				// Add music to album
 				albumDict.put(albumModel.id, albumModel);
 			}
 

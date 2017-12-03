@@ -78,9 +78,15 @@ public class AlbumManageActivity extends MenuActivity {
 
 				int trackNo = IOUtil.inputNatural("Input track no");
 				String title = IOUtil.inputLine("Input title");
+				String genreList = IOUtil.inputLine("Input genre (separator: ',')");
 
 				Music newMusic = new Music(title, this.model, trackNo);
 				newMusic.insert();
+
+				if (genreList != "") {
+					for (String genre: genreList.split(","))
+						newMusic.addGenreAndSave(genre);
+				}
 
 				IOUtil.printPopup("New music is inserted");
 				break;

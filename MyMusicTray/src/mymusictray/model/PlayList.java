@@ -84,7 +84,8 @@ public class PlayList extends StrongTypeModel implements ListableModel {
 							rs.getInt("music_id"),
 							rs.getString("music_title"),
 							null,
-							rs.getInt("music_track_no")
+							rs.getInt("music_track_no"),
+							null
 					));
 				}
 			}
