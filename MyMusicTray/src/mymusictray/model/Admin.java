@@ -9,8 +9,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Admin Entity
+ *
+ * @author Prev (0soo.2@prev.kr)
+ */
 public class Admin extends StrongTypeModel {
 
+	/**
+	 * Init table `admin` by SQL
+	 * @throws SQLException
+	 */
 	static public void initTable() throws SQLException {
 		Context.getDatabaseDriver().getStatement().executeUpdate(
 				"CREATE TABLE IF NOT EXISTS `admin` (\n" +
@@ -24,6 +33,12 @@ public class Admin extends StrongTypeModel {
 		);
 	}
 
+	/**
+	 * Select Admin instance by `accountId`
+	 * @param accountId: String id value of account
+	 * @return Admin instance
+	 * @throws NotFoundException if there is no admin which has accountId of param.
+	 */
 	static public Admin selectByAccountId(String accountId) {
 		try {
 			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
@@ -47,13 +62,32 @@ public class Admin extends StrongTypeModel {
 		return null;
 	}
 
-	public String accountId;
-	public String password;
-	public String name;
-	public String createdDate;
+
 
 	/**
-	 * Constructor of User Model
+	 * Account id used to login
+	 */
+	public String accountId;
+
+	/**
+	 * Password used to login
+	 */
+	public String password;
+
+	/**
+	 * Name of Admin
+	 */
+	public String name;
+
+	/**
+	 * Account created date
+	 */
+	public String createdDate;
+
+
+	/**
+	 * Constructor of Admin Model.
+	 *   Generally used in result of selection
 	 * @param id
 	 * @param accountId
 	 * @param password
@@ -74,6 +108,13 @@ public class Admin extends StrongTypeModel {
 
 	}
 
+	/**
+	 * Constructor of Admin Model with no id (= not saved to database yet)
+	 *   Generally used to make new admin
+	 * @param accountId
+	 * @param password
+	 * @param name
+	 */
 	public Admin(String accountId,
 				 String password,
 				 String name) {
@@ -81,6 +122,10 @@ public class Admin extends StrongTypeModel {
 		this(-1, accountId, password, name, new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
 	}
 
+	/**
+	 * Get attribute name and value set that is not a key.
+	 * @return (name-value) set of attributes
+	 */
 	@Override
 	public Map<String, String> getSubAttributes() {
 		Map<String, String > ret = new HashMap<>();

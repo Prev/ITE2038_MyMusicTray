@@ -6,8 +6,20 @@ import mymusictray.exception.NotFoundException;
 import java.sql.*;
 import java.util.*;
 
+
+/**
+ * Music Entity
+ *
+ * @author Prev (0soo.2@prev.kr)
+ */
 public class Music extends StrongTypeModel implements ListableModel {
 
+	// TODO: use `artist_music` table
+
+	/**
+	 * Init table `music` and related table `music_genre` by SQL
+	 * @throws SQLException
+	 */
 	static public void initTable() throws SQLException {
 		Statement stmt = Context.getDatabaseDriver().getStatement();
 		stmt.executeUpdate(
@@ -121,25 +133,49 @@ public class Music extends StrongTypeModel implements ListableModel {
 
 	/**
 	 * Get one music by id
-	 *
-	 * @param id: PK of artist
+	 * @param id: PK of music
 	 * @return Music instance
 	 * @throws NotFoundException
 	 */
 	public static Music selectById(int id) {
 		List<Music> list = getMusics("WHERE music.id = '" + id + "'");
 		if (list.size() == 0)
-			throw new NotFoundException("Cannot find artist by id '"+id+"'");
+			throw new NotFoundException("Cannot find music by id '"+id+"'");
 
 		return list.get(0);
 	}
 
 
+	/**
+	 * Title of this music
+	 */
 	public String title;
+
+	/**
+	 * Album that contains this music
+	 */
 	public Album album;
+
+	/**
+	 * Track number of this music
+	 */
 	public int trackNo;
+
+	/**
+	 * Genre list of this music
+	 */
 	public List<String> genre;
 
+
+	/**
+	 * Constructor of Music Model
+	 *   Generally used in result of selection
+	 * @param id
+	 * @param title
+	 * @param album
+	 * @param trackNo
+	 * @param genre
+	 */
 	public Music(int id,
 				 String title,
 				 Album album,
@@ -161,16 +197,34 @@ public class Music extends StrongTypeModel implements ListableModel {
 		this.genre = genre;
 	}
 
+	/**
+	 * Constructor of Music Model with no id (= not saved to database yet)
+	 *   Generally used to make new album
+	 * @param title
+	 * @param album
+	 * @param trackNo
+	 */
 	public Music(String title,
 				 Album album,
 				 int trackNo) {
 		this(-1, title, album, trackNo, null);
 	}
 
+
+	/**
+	 * Get string version of genre
+	 * @return Joined string of genre list
+	 */
 	public String getGenreString() {
 		return String.join(",", this.genre);
 	}
 
+
+	/**
+	 * Add genre to music and save to database.
+	 * 	 Insert tuple to `music_genre` table, and then add genre to `this.genre` property.
+	 * @param genre: Genre to insert
+	 */
 	public void addGenreAndSave(String genre) {
 		try {
 			PreparedStatement stmt = Context.getConnection().prepareStatement("INSERT INTO `music_genre`(`music_id`, `genre`) VALUES (?, ?)");
@@ -186,6 +240,10 @@ public class Music extends StrongTypeModel implements ListableModel {
 	}
 
 
+	/**
+	 * Get attribute name and value set that is not a key.
+	 * @return (name-value) set of attributes
+	 */
 	@Override
 	public Map<String, String> getSubAttributes() {
 		Map<String, String > ret = new HashMap<>();
@@ -195,11 +253,19 @@ public class Music extends StrongTypeModel implements ListableModel {
 		return ret;
 	}
 
+	/**
+	 * Return ID of this model to show identifying number
+	 * @return id
+	 */
 	@Override
 	public int getID() {
 		return this.id;
 	}
 
+	/**
+	 * Return name of this model to show readable string
+	 * @return title (similar value to name)
+	 */
 	@Override
 	public String getName() {
 		return this.title;

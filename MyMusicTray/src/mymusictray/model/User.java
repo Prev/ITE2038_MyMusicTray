@@ -7,8 +7,17 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * User Entity
+ *
+ * @author Prev (0soo.2@prev.kr)
+ */
 public class User extends StrongTypeModel {
 
+	/**
+	 * Init table `user` by SQL
+	 * @throws SQLException
+	 */
 	static public void initTable() throws SQLException {
 		Context.getDatabaseDriver().getStatement().executeUpdate(
 			"CREATE TABLE IF NOT EXISTS `user` (" +
@@ -25,6 +34,12 @@ public class User extends StrongTypeModel {
 		);
 	}
 
+	/**
+	 * Select User instance by `accountId`
+	 * @param accountId: String id value of account
+	 * @return User instance
+	 * @throws NotFoundException if there is no admin which has accountId of param.
+	 */
 	static public User selectByAccountId(String accountId) {
 		try {
 			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery("SELECT * FROM user WHERE account_id = '" + accountId + "';");
@@ -48,14 +63,55 @@ public class User extends StrongTypeModel {
 		return null;
 	}
 
+
+	/**
+	 * Account id used to login
+	 */
 	public String accountId;
+
+	/**
+	 * Password used to login
+	 */
 	public String password;
+
+	/**
+	 * Name of this user
+	 */
 	public String name;
+
+	/**
+	 * Birthday of this user
+	 */
 	public String birthday;
+
+	/**
+	 * Register date of this user
+	 */
 	public String registerDate;
+
+	/**
+	 * Email address of this user
+	 */
 	public String emailAddress;
+
+	/**
+	 * Phone number of this user
+	 */
 	public String phoneNumber;
 
+
+	/**
+	 * Constructor of User Model
+	 *   Generally used in result of selection
+	 * @param id
+	 * @param accountId
+	 * @param password
+	 * @param name
+	 * @param birthday
+	 * @param registerDate
+	 * @param emailAddress
+	 * @param phoneNumber
+	 */
 	public User(int id,
 				String accountId,
 				String password,
@@ -76,6 +132,17 @@ public class User extends StrongTypeModel {
 		this.phoneNumber = phoneNumber;
 	}
 
+
+	/**
+	 * Constructor of User Model with no id (= not saved to database yet)
+	 *   Generally used to make new admin
+	 * @param accountId
+	 * @param password
+	 * @param name
+	 * @param birthday
+	 * @param emailAddress
+	 * @param phoneNumber
+	 */
 	public User(String accountId,
 				String password,
 				String name,
@@ -85,6 +152,10 @@ public class User extends StrongTypeModel {
 		this(-1, accountId, password, name, birthday, null, emailAddress, phoneNumber);
 	}
 
+	/**
+	 * Get attribute name and value set that is not a key.
+	 * @return (name-value) set of attributes
+	 */
 	@Override
 	public Map<String, String> getSubAttributes() {
 		Map<String, String > ret = new HashMap<>();

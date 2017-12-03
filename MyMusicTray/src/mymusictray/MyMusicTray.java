@@ -3,6 +3,16 @@ package mymusictray;
 import mymusictray.activity.RootActivity;
 import mymusictray.core.Loader;
 
+
+/**
+ * MyMusicTray
+ *
+ * Imaginary Music Player with MySQL
+ * ITE2038
+ * ------
+ *
+ * @author Prev (0soo.2@prev.kr)
+ */
 public class MyMusicTray {
 
 	static private final String PROGRAM_TITLE = " __  __    _  _           __  __                     _                      _____                    _  _  \n" +

@@ -2,28 +2,34 @@ package mymusictray.model;
 
 import mymusictray.exception.ModelMisuseException;
 
+
+/**
+ * Data Structure that has insert, update, and remove operation
+ *
+ * @author Prev (0soo.2@prev.kr)
+ */
 public interface Model {
 
 	/**
-	 * Insert current mymusictray.model to database
+	 * Insert current model to database
 	 *
-	 * @throws ModelMisuseException when you try already inserted mymusictray.model
+	 * @throws ModelMisuseException when you try already inserted model
 	 */
 	void insert();
 
 
 	/**
-	 * Update current mymusictray.model to database
+	 * Update current model to database
 	 *
-	 * @throws ModelMisuseException when you try to update mymusictray.model that is not in database yet
+	 * @throws ModelMisuseException when you try to update model that is not in database yet
 	 */
 	void update();
 
 
 	/**
-	 * Remove current mymusictray.model from database
+	 * Remove current model from database
 	 *
-	 * @throws ModelMisuseException when you try to remove mymusictray.model that is not in database yet
+	 * @throws ModelMisuseException when you try to remove model that is not in database yet
 	 */
 	void remove();
 }

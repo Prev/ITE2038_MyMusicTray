@@ -9,8 +9,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Artist Entity
+ *
+ * @author Prev (0soo.2@prev.kr)
+ */
 public class Artist extends StrongTypeModel implements ListableModel {
 
+	/**
+	 * Init table `album` and related table `artist_music` by SQL
+	 * @throws SQLException
+	 */
 	static public void initTable() throws SQLException {
 		Statement stmt = Context.getDatabaseDriver().getStatement();
 		stmt.executeUpdate(
@@ -104,9 +113,24 @@ public class Artist extends StrongTypeModel implements ListableModel {
 	}
 
 
+	/**
+	 * Name of this artist
+	 */
 	public String name;
+
+	/**
+	 * Activity start date of this artist
+	 */
 	public String activityStartDate;
 
+
+	/**
+	 * Constructor of Artist Model
+	 *   Generally used in result of selection
+	 * @param id
+	 * @param name
+	 * @param activityStartDate
+	 */
 	public Artist(int id,
 				  String name,
 				  String activityStartDate) {
@@ -117,6 +141,12 @@ public class Artist extends StrongTypeModel implements ListableModel {
 		this.activityStartDate = activityStartDate;
 	}
 
+	/**
+	 * Constructor of Artist Model with no id (= not saved to database yet)
+	 *   Generally used to make new album
+	 * @param name
+	 * @param activityStartDate
+	 */
 	public Artist(String name,
 				  String activityStartDate) {
 
@@ -124,13 +154,8 @@ public class Artist extends StrongTypeModel implements ListableModel {
 	}
 
 
-	@Override
-	public Map<String, String> getSubAttributes() {
-		Map<String, String > ret = new HashMap<>();
-		ret.put("name", name);
-		ret.put("activity_start_date", activityStartDate);
-		return ret;
-	}
+
+
 
 	public void addRelationWithAlbum(Album album) {
 		try {
@@ -147,11 +172,31 @@ public class Artist extends StrongTypeModel implements ListableModel {
 		}
 	}
 
+	/**
+	 * Get attribute name and value set that is not a key.
+	 * @return (name-value) set of attributes
+	 */
+	@Override
+	public Map<String, String> getSubAttributes() {
+		Map<String, String > ret = new HashMap<>();
+		ret.put("name", name);
+		ret.put("activity_start_date", activityStartDate);
+		return ret;
+	}
+
+	/**
+	 * Return ID of this model to show identifying number
+	 * @return id
+	 */
 	@Override
 	public int getID() {
 		return this.id;
 	}
 
+	/**
+	 * Return name of this model to show readable string
+	 * @return name
+	 */
 	@Override
 	public String getName() {
 		return this.name;

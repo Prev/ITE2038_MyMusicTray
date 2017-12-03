@@ -8,8 +8,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Album Entity
+ *
+ * @author Prev (0soo.2@prev.kr)
+ */
 public class Album extends StrongTypeModel implements ListableModel {
 
+	/**
+	 * Init table `album` and related tables `album_genre` and `album_artists` by SQL
+	 * @throws SQLException
+	 */
 	static public void initTable() throws SQLException {
 		Statement stmt = Context.getDatabaseDriver().getStatement();
 		stmt.executeUpdate(
@@ -126,7 +136,12 @@ public class Album extends StrongTypeModel implements ListableModel {
 	}
 
 
-
+	/**
+	 * Type of albums
+	 *   1 : REGULAR
+	 *   2 : MINI
+	 *   3: SINGLE
+	 */
 	static public final int TYPE_REGULAR = 1;
 	static public final int TYPE_MINI = 2;
 	static public final int TYPE_SINGLE = 3;
@@ -149,13 +164,50 @@ public class Album extends StrongTypeModel implements ListableModel {
 		}
 	}
 
+
+
+
+
+	/**
+	 * Title of this album
+	 */
 	public String title;
+
+	/**
+	 * Release date of this album
+	 */
 	public String releaseDate;
+
+	/**
+	 * Type of this album (REGULAR/MINI/SINGLE)
+	 */
 	public int type;
+
+	/**
+	 * Artist list of this album
+	 */
 	public List<Artist> artists;
+
+	/**
+	 * Music list of this album
+	 */
 	public List<Music> musics;
+
+	/**
+	 * Genre list of this album
+	 */
 	public List<String> genre;
 
+
+	/**
+	 * Constructor of Album Model.
+	 *   Generally used in result of selection
+	 * @param id
+	 * @param title
+	 * @param releaseDate
+	 * @param type
+	 * @param genre
+	 */
 	public Album(int id,
 				 String title,
 				 String releaseDate,
@@ -177,6 +229,13 @@ public class Album extends StrongTypeModel implements ListableModel {
 		this.genre = genre;
 	}
 
+	/**
+	 * Constructor of Album Model with no id (= not saved to database yet)
+	 *   Generally used to make new album
+	 * @param title
+	 * @param releaseDate
+	 * @param type
+	 */
 	public Album(String title,
 				 String releaseDate,
 				 int type) {
@@ -184,6 +243,10 @@ public class Album extends StrongTypeModel implements ListableModel {
 		this(-1, title, releaseDate, type, null);
 	}
 
+	/**
+	 * Get string version of artists to print pretty.
+	 * @return Joined string of artist list
+	 */
 	public String getArtistsString() {
 		StringBuilder sb = new StringBuilder();
 		for (Artist artist: this.artists) {
@@ -194,14 +257,28 @@ public class Album extends StrongTypeModel implements ListableModel {
 		return sb.toString();
 	}
 
+	/**
+	 * Get readable type instead of integer
+	 * @return Text of type
+	 */
 	public String getReadableType() {
 		return getReadableType(this.type);
 	}
 
+	/**
+	 * Get string version of genre
+	 * @return Joined string of genre list
+	 */
 	public String getGenreString() {
 		return String.join(",", this.genre);
 	}
 
+
+	/**
+	 * Add genre to album and save to database.
+	 * 	 Insert tuple to `album_genre` table, and then add genre to `this.genre` property.
+	 * @param genre: Genre to insert
+	 */
 	public void addGenreAndSave(String genre) {
 		try {
 			PreparedStatement stmt = Context.getConnection().prepareStatement("INSERT INTO `album_genre`(`album_id`, `genre`) VALUES (?, ?)");
@@ -216,6 +293,10 @@ public class Album extends StrongTypeModel implements ListableModel {
 		}
 	}
 
+	/**
+	 * Get attribute name and value set that is not a key.
+	 * @return (name-value) set of attributes
+	 */
 	@Override
 	public Map<String, String> getSubAttributes() {
 		Map<String, String > ret = new HashMap<>();
@@ -225,11 +306,19 @@ public class Album extends StrongTypeModel implements ListableModel {
 		return ret;
 	}
 
+	/**
+	 * Return ID of this model to show identifying number
+	 * @return id
+	 */
 	@Override
 	public int getID() {
 		return this.id;
 	}
 
+	/**
+	 * Return name of this model to show readable string
+	 * @return title (similar value to name)
+	 */
 	@Override
 	public String getName() {
 		return this.title;

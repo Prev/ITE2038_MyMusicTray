@@ -7,8 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * PlayList Entity
+ *
+ * @author Prev (0soo.2@prev.kr)
+ */
 public class PlayList extends StrongTypeModel implements ListableModel {
 
+	/**
+	 * Init table `playlist` and related table `playlist_item` by SQL
+	 * @throws SQLException
+	 */
 	static public void initTable() throws SQLException {
 		Statement stmt = Context.getDatabaseDriver().getStatement();
 		stmt.executeUpdate(
@@ -32,7 +41,7 @@ public class PlayList extends StrongTypeModel implements ListableModel {
 
 	/**
 	 * Get all artists in database
-	 * @return List of Arist instance
+	 * @return List of ShallowPlayList instance
 	 */
 	public static List<PlayList> getAllPlaylists(User owner) {
 		List<PlayList> ret = new ArrayList<>();
@@ -45,6 +54,7 @@ public class PlayList extends StrongTypeModel implements ListableModel {
 			);
 
 			while (rs.next()) {
+				// It does not contains musics, only holds count of music
 				ret.add(new ShallowPlayList(
 						rs.getInt("id"),
 						rs.getString("name"),
@@ -59,6 +69,14 @@ public class PlayList extends StrongTypeModel implements ListableModel {
 		return ret;
 	}
 
+
+	/**
+	 * Get one playlist instance by `id`
+	 *   And it contains music if music and playlist is connected with relation `playlist_item`
+	 * @param id: PK value to search the instance
+	 * @return PlayList instance if found,
+	 * 		   null otherwise.
+	 */
 	public static PlayList getPlayListById(int id) {
 		PlayList model = null;
 		try {
@@ -92,13 +110,37 @@ public class PlayList extends StrongTypeModel implements ListableModel {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
+		// TODO throws NotFoundException if model is null
 		return model;
 	}
 
+
+
+	/**
+	 * Name of this playlist
+	 */
 	public String name;
+
+	/**
+	 * Owner of this playlist
+	 */
 	public User owner;
+
+	/**
+	 * List of Music of this playlist
+	 */
 	public List<Music> musics;
 
+
+	/**
+	 * Constructor of PlayList Model
+	 *   Generally used in result of selection
+	 * @param id
+	 * @param name
+	 * @param owner
+	 * @param musics
+	 */
 	public PlayList(int id,
 				 String name,
 				 User owner,
@@ -115,30 +157,24 @@ public class PlayList extends StrongTypeModel implements ListableModel {
 			this.musics = new ArrayList<>();
 	}
 
+
+	/**
+	 * Constructor of PlayList Model with no id (= not saved to database yet)
+	 *   Generally used to make new album
+	 * @param name
+	 * @param owner
+	 */
 	public PlayList(String name, User owner) {
 		this(-1, name, owner, null);
 	}
 
+
+	/**
+	 * Get count of music
+	 * @return size of `musics` property
+	 */
 	public int getMusicCount() {
 		return this.musics.size();
-	}
-
-	@Override
-	public Map<String, String> getSubAttributes() {
-		Map<String, String > ret = new HashMap<>();
-		ret.put("name", name);
-		ret.put("owner", Integer.toString(owner.id));
-		return ret;
-	}
-
-	@Override
-	public int getID() {
-		return this.id;
-	}
-
-	@Override
-	public String getName() {
-		return this.name;
 	}
 
 
@@ -179,21 +215,67 @@ public class PlayList extends StrongTypeModel implements ListableModel {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Get attribute name and value set that is not a key.
+	 * @return (name-value) set of attributes
+	 */
+	@Override
+	public Map<String, String> getSubAttributes() {
+		Map<String, String > ret = new HashMap<>();
+		ret.put("name", name);
+		ret.put("owner", Integer.toString(owner.id));
+		return ret;
+	}
+
+	/**
+	 * Return ID of this model to show identifying number
+	 * @return id
+	 */
+	@Override
+	public int getID() {
+		return this.id;
+	}
+
+	/**
+	 * Return name of this model to show readable string
+	 * @return title (similar value to name)
+	 */
+	@Override
+	public String getName() {
+		return this.name;
+	}
 }
 
+
 /**
- * Playlist that not contains music (only count)
+ * Playlist that not contains music.
+ *   Since this class inherits PlayList, there is no problem to show data like a normal PlayList from the outside,
+ *    but it does not have musics in real, it is difficult to execute commands related to commit.
  */
 class ShallowPlayList extends PlayList {
 
 	private int musicCount;
 
+	/**
+	 * Constructor of ShallowPlayList
+	 *   Get `musicCount` as an argument instead of musics list type
+	 *
+	 * @param id
+	 * @param name
+	 * @param owner
+	 * @param musicCount
+	 */
 	public ShallowPlayList(int id, String name, User owner, int musicCount) {
 		super(id, name, owner, null);
 		this.musicCount = musicCount;
 	}
 
+	@Override
 	public int getMusicCount() {
 		return musicCount;
 	}
+
+
+	// TODO: forbid commit-like commands
 }

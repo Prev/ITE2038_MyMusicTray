@@ -11,11 +11,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Common Model of Common Strong-Typed Entity.
+ *  `insert()`, `update()`, `delete()` is implemented by PK `id` and method `getSubAttributes()`
+ *
+ * @author Prev (0soo.2@prev.kr)
+ */
 public abstract class StrongTypeModel implements Model {
 
+	/**
+	 * Primary key attribute
+	 */
 	public int id;
+
+	/**
+	 * Name of this entity's table
+	 */
 	public String tableName;
 
+
+	/**
+	 * Constructor of StrongTypeModel.
+	 *   tableName is required to automate [inert & update & delete] queries
+	 * @param tableName
+	 */
 	public StrongTypeModel(String tableName) {
 		this.id = -1;
 		this.tableName = tableName;
