@@ -38,6 +38,13 @@ public class AlbumAndMusicInsertingActivity extends Activity {
 
 		artist.addRelationWithAlbum(model);
 
+
+		String genreList = IOUtil.inputLine("Input genre (separator: ',')");
+		if (genreList != "") {
+			for (String genre: genreList.split(","))
+				model.addGenreAndSave(genre);
+		}
+
 		IOUtil.printPopup("New Album is created successfully", "Start managing this album");
 
 		(new AlbumManageActivity(model)).start();

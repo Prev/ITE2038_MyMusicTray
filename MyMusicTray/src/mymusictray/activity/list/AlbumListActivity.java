@@ -21,15 +21,16 @@ public class AlbumListActivity extends Activity {
 	public void start() {
 		IOUtil.printSection("View Album List", '-');
 
-		System.out.printf("| %-2s | %-25s | %-10s | %-25s | %-11s |\n", "ID", "Title", "Type", "Artists", "Release Date");
+		System.out.printf("| %-2s | %-20s | %-10s | %-20s | %-10s | %-11s |\n", "ID", "Title", "Type", "Artists", "Genre", "Release Date");
 		IOUtil.printSection("", '-');
 
 		for (Album a: Album.getAllAlbums()) {
-			System.out.printf("| %-2d | %-25s | %-10s | %-25s | %-11s |\n",
+			System.out.printf("| %-2d | %-20s | %-10s | %-20s | %-10s | %-11s |\n",
 					a.id,
 					a.title,
 					a.getReadableType(),
 					a.getArtistsString(),
+					a.getGenreString(),
 					a.releaseDate
 			);
 		}

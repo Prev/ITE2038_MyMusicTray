@@ -23,6 +23,7 @@ public class AlbumManageActivity extends MenuActivity {
 		System.out.println("Title:\t\t\t" + this.model.title);
 		System.out.println("Release Date:\t" + this.model.releaseDate);
 		System.out.println("Type:\t\t\t" + this.model.getReadableType());
+		System.out.println("Genre:\t\t\t" + this.model.getGenreString());
 
 		System.out.print("Artists:");
 		for (int i = 0; i < this.model.artists.size(); i++) {

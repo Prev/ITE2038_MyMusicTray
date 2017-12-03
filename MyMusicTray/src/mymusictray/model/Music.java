@@ -60,7 +60,7 @@ public class Music extends StrongTypeModel implements ListableModel {
 
 		try {
 			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
-					"SELECT music.*, music_genre.genre\n," +
+					"SELECT music.*, music_genre.genre AS music_genre\n," +
 							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start,\n" +
 							"album.id AS album_id, album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type \n" +
 						"FROM music\n" +
@@ -76,7 +76,8 @@ public class Music extends StrongTypeModel implements ListableModel {
 						rs.getInt("album_id"),
 						rs.getString("album_title"),
 						rs.getString("album_release_date"),
-						rs.getInt("album_type")
+						rs.getInt("album_type"),
+						null
 				);
 
 				Artist artistModel = Artist.that(
@@ -97,10 +98,10 @@ public class Music extends StrongTypeModel implements ListableModel {
 				);
 				musicDict.put(musicModel.id, musicModel);
 
-				// Add genre if not null
-				String genre = rs.getString("genre");
-				if (genre != null)
-					musicModel.genre.add(genre);
+				// Add music's genre if not null and doesn't contain
+				String musicGenre = rs.getString("music_genre");
+				if (musicGenre != null && !musicModel.genre.contains(musicGenre))
+					musicModel.genre.add(musicGenre);
 			}
 
 		} catch (SQLException e) {

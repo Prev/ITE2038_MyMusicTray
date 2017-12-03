@@ -46,11 +46,11 @@ public class Album extends StrongTypeModel implements ListableModel {
 	 *   returns an existing, already created instance with the same ID.
 	 * @return Album instance
 	 */
-	static public Album that(int id, String title, String releaseDate, int type) {
+	static public Album that(int id, String title, String releaseDate, int type, List<String> genre) {
 		if (repository.containsKey(id))
 			return repository.get(id);
 		else {
-			Album newInstance = new Album(id, title, releaseDate, type);
+			Album newInstance = new Album(id, title, releaseDate, type, genre);
 			repository.put(id, newInstance);
 			return newInstance;
 		}
@@ -68,12 +68,14 @@ public class Album extends StrongTypeModel implements ListableModel {
 					"SELECT " +
 							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start,\n" +
 							"album.id AS album_id, album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type \n," +
-							"music.*, music_genre.genre\n" +
+							"music.*, music_genre.genre AS music_genre\n," +
+							"album_genre.genre AS album_genre\n" +
 						"FROM album\n" +
 						"LEFT JOIN album_artists ON album_artists.album_id = album.id\n" +
 						"LEFT JOIN artist ON artist.id = album_artists.artist_id\n" +
 						"LEFT JOIN music ON music.album_id = album.id\n" +
-						"LEFT JOIN music_genre ON music_genre.music_id = music.id;\n"
+						"LEFT JOIN music_genre ON music_genre.music_id = music.id\n" +
+						"LEFT JOIN album_genre ON album_genre.album_id = album.id;\n"
 			);
 
 			while (rs.next()) {
@@ -81,8 +83,15 @@ public class Album extends StrongTypeModel implements ListableModel {
 						rs.getInt("album_id"),
 						rs.getString("album_title"),
 						rs.getString("album_release_date"),
-						rs.getInt("album_type")
+						rs.getInt("album_type"),
+						null
 				);
+
+				// Add music's genre if not null and doesn't contain
+				String albumGenre = rs.getString("album_genre");
+				if (albumGenre != null && !albumModel.genre.contains(albumGenre))
+					albumModel.genre.add(albumGenre);
+
 				Artist artistModel = Artist.that(
 						rs.getInt("artist_id"),
 						rs.getString("artist_name"),
@@ -100,10 +109,10 @@ public class Album extends StrongTypeModel implements ListableModel {
 						null
 				);
 
-				// Add genre if not null
-				String genre = rs.getString("genre");
-				if (genre != null)
-					musicModel.genre.add(genre);
+				// Add music's genre if not null and doesn't contain
+				String musicGenre = rs.getString("music_genre");
+				if (musicGenre != null && !musicModel.genre.contains(musicGenre))
+					musicModel.genre.add(musicGenre);
 
 				// Add music to album
 				albumDict.put(albumModel.id, albumModel);
@@ -145,11 +154,13 @@ public class Album extends StrongTypeModel implements ListableModel {
 	public int type;
 	public List<Artist> artists;
 	public List<Music> musics;
+	public List<String> genre;
 
 	public Album(int id,
 				 String title,
 				 String releaseDate,
-				 int type) {
+				 int type,
+				 List<String> genre) {
 
 		super("album");
 		this.id = id;
@@ -160,14 +171,17 @@ public class Album extends StrongTypeModel implements ListableModel {
 		this.artists = new ArrayList<>();
 		this.musics = new ArrayList<>();
 
-		// TODO: genre
+		if (genre == null)
+			genre = new ArrayList<>();
+
+		this.genre = genre;
 	}
 
 	public Album(String title,
 				 String releaseDate,
 				 int type) {
 
-		this(-1, title, releaseDate, type);
+		this(-1, title, releaseDate, type, null);
 	}
 
 	public String getArtistsString() {
@@ -182,6 +196,24 @@ public class Album extends StrongTypeModel implements ListableModel {
 
 	public String getReadableType() {
 		return getReadableType(this.type);
+	}
+
+	public String getGenreString() {
+		return String.join(",", this.genre);
+	}
+
+	public void addGenreAndSave(String genre) {
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement("INSERT INTO `album_genre`(`album_id`, `genre`) VALUES (?, ?)");
+			stmt.setInt(1, this.id);
+			stmt.setString(2, genre);
+			stmt.executeUpdate();
+
+			this.genre.add(genre);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
