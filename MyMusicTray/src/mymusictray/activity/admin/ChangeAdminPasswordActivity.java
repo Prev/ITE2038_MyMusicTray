@@ -4,7 +4,7 @@ import mymusictray.activity.Activity;
 import mymusictray.model.Admin;
 import mymusictray.util.IOUtil;
 
-public class ChangeAdminPasswordActivity extends Activity {
+public class ChangeAdminPasswordActivity implements Activity {
 
 	private Admin model;
 

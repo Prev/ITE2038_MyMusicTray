@@ -6,7 +6,7 @@ import mymusictray.exception.NotFoundException;
 import mymusictray.model.Admin;
 import mymusictray.util.IOUtil;
 
-public class AdminLoginActivity extends Activity {
+public class AdminLoginActivity implements Activity {
 
 	@Override
 	public void start() {

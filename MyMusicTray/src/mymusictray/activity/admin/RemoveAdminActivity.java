@@ -4,7 +4,7 @@ import mymusictray.activity.Activity;
 import mymusictray.model.Admin;
 import mymusictray.util.IOUtil;
 
-public class RemoveAdminActivity extends Activity {
+public class RemoveAdminActivity implements Activity {
 
 	private Admin model;
 

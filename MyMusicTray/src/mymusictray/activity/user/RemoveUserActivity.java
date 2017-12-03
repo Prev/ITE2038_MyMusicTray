@@ -4,7 +4,7 @@ import mymusictray.activity.Activity;
 import mymusictray.model.User;
 import mymusictray.util.IOUtil;
 
-public class RemoveUserActivity extends Activity {
+public class RemoveUserActivity implements Activity {
 
 	private User model;
 

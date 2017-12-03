@@ -7,7 +7,7 @@ import mymusictray.model.Album;
 import mymusictray.util.IOUtil;
 
 
-public class AlbumListActivity extends Activity {
+public class AlbumListActivity implements Activity {
 
 	private Admin adminInstance = null;
 

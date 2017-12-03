@@ -4,7 +4,7 @@ import mymusictray.activity.Activity;
 import mymusictray.model.Music;
 import mymusictray.util.IOUtil;
 
-public class MusicListActivity extends Activity {
+public class MusicListActivity implements Activity {
 
 	@Override
 	public void start() {

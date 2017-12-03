@@ -4,7 +4,7 @@ import mymusictray.activity.Activity;
 import mymusictray.model.User;
 import mymusictray.util.IOUtil;
 
-public class ChangeUserPasswordActivity extends Activity {
+public class ChangeUserPasswordActivity implements Activity {
 
 	private User model;
 

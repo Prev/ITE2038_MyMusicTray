@@ -6,7 +6,7 @@ import mymusictray.model.PlayList;
 import mymusictray.model.User;
 import mymusictray.util.IOUtil;
 
-public class PlayListListActivity extends Activity {
+public class PlayListListActivity implements Activity {
 
 	private User user;
 

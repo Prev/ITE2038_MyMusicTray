@@ -4,7 +4,7 @@ import mymusictray.activity.Activity;
 import mymusictray.model.Admin;
 import mymusictray.util.IOUtil;
 
-public class RegisterNewAdminActivity extends Activity {
+public class RegisterNewAdminActivity implements Activity {
 
 	@Override
 	public void start() {

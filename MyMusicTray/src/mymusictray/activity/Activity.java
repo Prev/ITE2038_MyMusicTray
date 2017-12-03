@@ -1,14 +1,10 @@
 package mymusictray.activity;
 
-abstract public class Activity {
-
-	/**
-	 * Activity Constructor
-	 */
-	public Activity() { }
+public interface Activity {
 
 	/**
 	 * Start activity.
 	 */
-	abstract public void start();
+	void start();
 }
+

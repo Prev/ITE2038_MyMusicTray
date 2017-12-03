@@ -2,7 +2,7 @@ package mymusictray.activity;
 
 import mymusictray.util.IOUtil;
 
-abstract public class MenuActivity extends Activity {
+abstract public class MenuActivity implements Activity {
 
 	private String title;
 
