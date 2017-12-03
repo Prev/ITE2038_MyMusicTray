@@ -37,13 +37,13 @@ public class Music extends StrongTypeModel implements ListableModel {
 	 *   returns an existing, already created instance with the same ID.
 	 * @return Music instance
 	 */
-	static public Music that(int id, String title, Album album, int trackNo) {
+	static public Music that(int id, String title, Album album, int trackNo, List<String> genre) {
 		if (id == 0) return null;
 
 		if (repository.containsKey(id))
 			return repository.get(id);
 		else {
-			Music newInstance = new Music(id, title, album, trackNo);
+			Music newInstance = new Music(id, title, album, trackNo, genre);
 			repository.put(id, newInstance);
 			return newInstance;
 		}
@@ -60,13 +60,14 @@ public class Music extends StrongTypeModel implements ListableModel {
 
 		try {
 			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
-					"SELECT music.*,\n" +
+					"SELECT music.*, music_genre.genre AS music_genre\n," +
 							"artist.id AS artist_id, artist.name AS artist_name, artist.activity_start_date AS artist_act_start,\n" +
 							"album.id AS album_id, album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type \n" +
 						"FROM music\n" +
 						"LEFT JOIN album ON music.album_id = album.id\n" +
 						"LEFT JOIN album_artists ON album_artists.album_id = music.album_id\n" +
 						"LEFT JOIN artist ON artist.id = album_artists.artist_id\n" +
+						"LEFT JOIN music_genre ON music_genre.music_id = music.id\n" +
 						condition + ";"
 			);
 
@@ -75,7 +76,8 @@ public class Music extends StrongTypeModel implements ListableModel {
 						rs.getInt("album_id"),
 						rs.getString("album_title"),
 						rs.getString("album_release_date"),
-						rs.getInt("album_type")
+						rs.getInt("album_type"),
+						null
 				);
 
 				Artist artistModel = Artist.that(
@@ -91,9 +93,15 @@ public class Music extends StrongTypeModel implements ListableModel {
 						rs.getInt("id"),
 						rs.getString("title"),
 						albumModel,
-						rs.getInt("track_no")
+						rs.getInt("track_no"),
+						null
 				);
 				musicDict.put(musicModel.id, musicModel);
+
+				// Add music's genre if not null and doesn't contain
+				String musicGenre = rs.getString("music_genre");
+				if (musicGenre != null && !musicModel.genre.contains(musicGenre))
+					musicModel.genre.add(musicGenre);
 			}
 
 		} catch (SQLException e) {
@@ -130,11 +138,13 @@ public class Music extends StrongTypeModel implements ListableModel {
 	public String title;
 	public Album album;
 	public int trackNo;
+	public List<String> genre;
 
 	public Music(int id,
 				 String title,
 				 Album album,
-				 int trackNo) {
+				 int trackNo,
+				 List<String> genre) {
 
 		super("music");
 		this.id = id;
@@ -145,14 +155,34 @@ public class Music extends StrongTypeModel implements ListableModel {
 		if (this.album != null && !this.album.musics.contains(this))
 			this.album.musics.add(this);
 
-		// TODO: genre
+		if (genre == null)
+			genre = new ArrayList<>();
 
+		this.genre = genre;
 	}
 
 	public Music(String title,
 				 Album album,
 				 int trackNo) {
-		this(-1, title, album, trackNo);
+		this(-1, title, album, trackNo, null);
+	}
+
+	public String getGenreString() {
+		return String.join(",", this.genre);
+	}
+
+	public void addGenreAndSave(String genre) {
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement("INSERT INTO `music_genre`(`music_id`, `genre`) VALUES (?, ?)");
+			stmt.setInt(1, this.id);
+			stmt.setString(2, genre);
+			stmt.executeUpdate();
+
+			this.genre.add(genre);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 

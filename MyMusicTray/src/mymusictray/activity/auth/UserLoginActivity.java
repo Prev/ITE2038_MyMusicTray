@@ -25,11 +25,11 @@ public class UserLoginActivity extends Activity {
 				(new UserRootActivity(model)).start();
 
 			}else {
-				(new LoginFailedActivity("Id and password are not matched")).start();
+				(new LoginFailedActivity("Id and password are not matched", this)).start();
 			}
 
 		}catch (NotFoundException e) {
-			(new LoginFailedActivity("Account not exists")).start();
+			(new LoginFailedActivity("Account not exists", this)).start();
 		}
 	}
 }

@@ -23,6 +23,7 @@ public class AlbumManageActivity extends MenuActivity {
 		System.out.println("Title:\t\t\t" + this.model.title);
 		System.out.println("Release Date:\t" + this.model.releaseDate);
 		System.out.println("Type:\t\t\t" + this.model.getReadableType());
+		System.out.println("Genre:\t\t\t" + this.model.getGenreString());
 
 		System.out.print("Artists:");
 		for (int i = 0; i < this.model.artists.size(); i++) {
@@ -78,9 +79,15 @@ public class AlbumManageActivity extends MenuActivity {
 
 				int trackNo = IOUtil.inputNatural("Input track no");
 				String title = IOUtil.inputLine("Input title");
+				String genreList = IOUtil.inputLine("Input genre (separator: ',')");
 
 				Music newMusic = new Music(title, this.model, trackNo);
 				newMusic.insert();
+
+				if (genreList != "") {
+					for (String genre: genreList.split(","))
+						newMusic.addGenreAndSave(genre);
+				}
 
 				IOUtil.printPopup("New music is inserted");
 				break;

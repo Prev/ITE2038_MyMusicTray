@@ -21,7 +21,7 @@ public class AdminRootActivity extends MenuActivity {
 		return new String[] {
 				"View music list",
 				"View artist list",
-				"View album list",
+				"View and manage album list",
 				"Add new artist",
 				"Add new album and music",
 				"Register new admin",
