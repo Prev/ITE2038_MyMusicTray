@@ -2,7 +2,8 @@
     <description>MyMusicTray</description>
     <property name="dist.src" location="src"/>
     <property name="dist.classes" location="classes"/>
-    <property name="dist.lib" location="classes"/>
+    <property name="dist.lib" location="lib"/>
+    <property name="dist.jar" location="MyMusicTray.jar"/>
 
     <target name="compile">
         <mkdir dir="${dist.classes}"/>
@@ -14,7 +15,7 @@
     </target>
 
     <target name="build-jar" depends="compile">
-        <jar destfile="MyMusicTray.jar" basedir="${dist.classes}">
+        <jar destfile="${dist.jar}" basedir="${dist.classes}">
             <zipgroupfileset dir="${dist.lib}" includes="mariadb-java-client-1.1.10.jar" />
             <manifest>
                 <attribute name="Main-Class" value="mymusictray.MyMusicTray"/>
