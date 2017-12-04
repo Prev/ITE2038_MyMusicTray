@@ -1,0 +1,24 @@
+<project name="MyMusicTray" basedir="." default="build-jar">
+    <description>MyMusicTray</description>
+    <property name="dist.src" location="src"/>
+    <property name="dist.classes" location="classes"/>
+    <property name="dist.lib" location="classes"/>
+
+    <target name="compile">
+        <mkdir dir="${dist.classes}"/>
+        <javac srcdir="src" destdir="${dist.classes}">
+            <classpath>
+                <pathelement path="${dist.lib}/mariadb-java-client-1.1.10.jar"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="build-jar" depends="compile">
+        <jar destfile="MyMusicTray.jar" basedir="${dist.classes}">
+            <zipgroupfileset dir="${dist.lib}" includes="mariadb-java-client-1.1.10.jar" />
+            <manifest>
+                <attribute name="Main-Class" value="mymusictray.MyMusicTray"/>
+            </manifest>
+        </jar>
+    </target>
+</project>

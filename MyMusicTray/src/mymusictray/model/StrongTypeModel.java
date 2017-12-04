@@ -62,7 +62,7 @@ public abstract class StrongTypeModel implements Model {
 
 			String sql = "INSERT INTO `" + this.tableName + "` (" +
 					String.join(",", attrs.keySet()) +
-					") values('" +
+					") VALUES('" +
 					String.join("','", attrs.values()) +
 					"');";
 
