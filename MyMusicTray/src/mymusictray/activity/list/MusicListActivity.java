@@ -17,7 +17,7 @@ public class MusicListActivity implements Activity {
 			System.out.printf("| %-2d | %-19s | %-17s | %-10s | %-17s | %-7d |\n",
 					m.id,
 					m.title,
-					m.album.getArtistsString(),
+					m.getArtistsString(),
 					m.getGenreString(),
 					m.album.title,
 					m.trackNo

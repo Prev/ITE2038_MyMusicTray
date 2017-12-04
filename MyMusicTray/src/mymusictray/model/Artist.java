@@ -17,7 +17,7 @@ import java.util.Map;
 public class Artist extends StrongTypeModel implements ListableModel {
 
 	/**
-	 * Init table `album` and related table `artist_music` by SQL
+	 * Init table `album` by SQL
 	 * @throws SQLException
 	 */
 	static public void initTable() throws SQLException {
@@ -29,14 +29,6 @@ public class Artist extends StrongTypeModel implements ListableModel {
 						"  `activity_start_date` date NOT NULL,\n" +
 						"  PRIMARY KEY (`id`)\n" +
 						") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;\n"
-		);
-		stmt.executeUpdate(
-				"CREATE TABLE IF NOT EXISTS `artist_musics` (\n" +
-						"  `artist_id` int(11) NOT NULL,\n" +
-						"  `music_id` int(11) NOT NULL,\n" +
-						"  PRIMARY KEY (`artist_id`,`music_id`),\n" +
-						"  KEY `music_id` (`music_id`)\n" +
-						") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;\n"
 		);
 	}
 

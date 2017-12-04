@@ -8,7 +8,7 @@ import java.sql.*;
 public class DatabaseLoader {
 
 	static String[] TABLES = {"admin", "album", "album_artists", "album_genre",
-			"artist", "artist_musics", "music", "music_genre",
+			"artist", "music_artists", "music", "music_genre",
 			"playlist", "playlist_item", "user"};
 
 
@@ -77,12 +77,12 @@ public class DatabaseLoader {
 			stmt.execute("ALTER TABLE `album_genre`\n" +
 					"  ADD CONSTRAINT `album_genre_ibfk_1` FOREIGN KEY (`album_id`) REFERENCES `album` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;\n"
 			);
-			stmt.execute("ALTER TABLE `artist_musics`\n" +
-					"  ADD CONSTRAINT `artist_musics_ibfk_1` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,\n" +
-					"  ADD CONSTRAINT `artist_musics_ibfk_2` FOREIGN KEY (`music_id`) REFERENCES `music` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;\n"
-			);
 			stmt.execute("ALTER TABLE `music`\n" +
 					"  ADD CONSTRAINT `music_ibfk_1` FOREIGN KEY (`album_id`) REFERENCES `album` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;\n"
+			);
+			stmt.execute("ALTER TABLE `music_artists`\n" +
+					"  ADD CONSTRAINT `music_artists_ibfk_1` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,\n" +
+					"  ADD CONSTRAINT `music_artists_ibfk_2` FOREIGN KEY (`music_id`) REFERENCES `music` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;\n"
 			);
 			stmt.execute("ALTER TABLE `music_genre`\n" +
 					"  ADD CONSTRAINT `music_genre_ibfk_1` FOREIGN KEY (`music_id`) REFERENCES `music` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;\n"

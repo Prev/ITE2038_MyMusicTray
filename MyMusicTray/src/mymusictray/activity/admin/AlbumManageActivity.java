@@ -29,12 +29,13 @@ public class AlbumManageActivity extends MenuActivity {
 		for (int i = 0; i < this.model.artists.size(); i++) {
 			if (i > 0) System.out.print("\t\t");
 			Artist a = this.model.artists.get(i);
-			System.out.printf("\t\t%s (id=%d)\n", a.name, a.id);
+			System.out.printf("\t\t%s (#%d)\n", a.name, a.id);
 		}
 
 		System.out.println("Musics:");
-		for (Music m: this.model.musics)
-			System.out.printf("\t\t%d. %s (id=%d)\n", m.trackNo, m.title, m.id);
+
+		for (Music m: Music.getMusics("WHERE album_id='"+this.model.id+"'"))
+			System.out.printf("\t\t\t%-2d. %s(#%d) - %s\n", m.trackNo, m.title, m.id, m.getArtistsString());
 
 
 		System.out.println("\n");

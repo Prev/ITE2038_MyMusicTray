@@ -114,6 +114,7 @@ public class Album extends StrongTypeModel implements ListableModel {
 				Music musicModel = Music.that(
 						rs.getInt("id"),
 						rs.getString("title"),
+						null,
 						albumModel,
 						rs.getInt("track_no"),
 						null
@@ -248,6 +249,8 @@ public class Album extends StrongTypeModel implements ListableModel {
 	 * @return Joined string of artist list
 	 */
 	public String getArtistsString() {
+		if (this.artists.size() == 0) return "";
+
 		StringBuilder sb = new StringBuilder();
 		for (Artist artist: this.artists) {
 			sb.append(artist.name);

@@ -17,7 +17,7 @@ public class Music extends StrongTypeModel implements ListableModel {
 	// TODO: use `artist_music` table
 
 	/**
-	 * Init table `music` and related table `music_genre` by SQL
+	 * Init table `music` and related tables `music_artists` and `music_genre` by SQL
 	 * @throws SQLException
 	 */
 	static public void initTable() throws SQLException {
@@ -31,6 +31,14 @@ public class Music extends StrongTypeModel implements ListableModel {
 						"  PRIMARY KEY (`id`)," +
 						"  KEY `album_id` (`album_id`)" +
 						") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ;"
+		);
+		stmt.executeUpdate(
+				"CREATE TABLE IF NOT EXISTS `music_artists` (\n" +
+						"  `artist_id` int(11) NOT NULL,\n" +
+						"  `music_id` int(11) NOT NULL,\n" +
+						"  PRIMARY KEY (`artist_id`,`music_id`),\n" +
+						"  KEY `music_id` (`music_id`)\n" +
+						") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;\n"
 		);
 		stmt.executeUpdate(
 				"CREATE TABLE IF NOT EXISTS `music_genre` (\n" +
@@ -49,13 +57,13 @@ public class Music extends StrongTypeModel implements ListableModel {
 	 *   returns an existing, already created instance with the same ID.
 	 * @return Music instance
 	 */
-	static public Music that(int id, String title, Album album, int trackNo, List<String> genre) {
+	static public Music that(int id, String title, List<Artist> artists, Album album, int trackNo, List<String> genre) {
 		if (id == 0) return null;
 
 		if (repository.containsKey(id))
 			return repository.get(id);
 		else {
-			Music newInstance = new Music(id, title, album, trackNo, genre);
+			Music newInstance = new Music(id, title, artists, album, trackNo, genre);
 			repository.put(id, newInstance);
 			return newInstance;
 		}
@@ -77,8 +85,8 @@ public class Music extends StrongTypeModel implements ListableModel {
 							"album.id AS album_id, album.title AS album_title, album.release_date AS album_release_date, album.type AS album_type \n" +
 						"FROM music\n" +
 						"LEFT JOIN album ON music.album_id = album.id\n" +
-						"LEFT JOIN album_artists ON album_artists.album_id = music.album_id\n" +
-						"LEFT JOIN artist ON artist.id = album_artists.artist_id\n" +
+						"LEFT JOIN music_artists ON music_artists.music_id = music.id\n" +
+						"LEFT JOIN artist ON artist.id = music_artists.artist_id\n" +
 						"LEFT JOIN music_genre ON music_genre.music_id = music.id\n" +
 						condition + ";"
 			);
@@ -98,17 +106,18 @@ public class Music extends StrongTypeModel implements ListableModel {
 						rs.getString("artist_act_start")
 				);
 
-				if (!albumModel.artists.contains(artistModel))
-					albumModel.artists.add(artistModel);
-
 				Music musicModel = Music.that(
 						rs.getInt("id"),
 						rs.getString("title"),
+						null,
 						albumModel,
 						rs.getInt("track_no"),
 						null
 				);
 				musicDict.put(musicModel.id, musicModel);
+
+				if (!musicModel.artists.contains(artistModel))
+					musicModel.artists.add(artistModel);
 
 				// Add music's genre if not null and doesn't contain
 				String musicGenre = rs.getString("music_genre");
@@ -152,6 +161,11 @@ public class Music extends StrongTypeModel implements ListableModel {
 	public String title;
 
 	/**
+	 * Artist list that composes this music
+	 */
+	public List<Artist> artists;
+
+	/**
 	 * Album that contains this music
 	 */
 	public Album album;
@@ -178,21 +192,27 @@ public class Music extends StrongTypeModel implements ListableModel {
 	 */
 	public Music(int id,
 				 String title,
+				 List<Artist> artists,
 				 Album album,
 				 int trackNo,
 				 List<String> genre) {
 
 		super("music");
+
+		if (artists == null)
+			artists = new ArrayList<>();
+
+		if (genre == null)
+			genre = new ArrayList<>();
+
 		this.id = id;
 		this.title = title;
+		this.artists = artists;
 		this.album = album;
 		this.trackNo = trackNo;
 
 		if (this.album != null && !this.album.musics.contains(this))
 			this.album.musics.add(this);
-
-		if (genre == null)
-			genre = new ArrayList<>();
 
 		this.genre = genre;
 	}
@@ -207,9 +227,25 @@ public class Music extends StrongTypeModel implements ListableModel {
 	public Music(String title,
 				 Album album,
 				 int trackNo) {
-		this(-1, title, album, trackNo, null);
+		this(-1, title, null, album, trackNo, null);
 	}
 
+
+	/**
+	 * Get string version of artists to print pretty.
+	 * @return Joined string of artist list
+	 */
+	public String getArtistsString() {
+		if (this.artists.size() == 0) return "";
+
+		StringBuilder sb = new StringBuilder();
+		for (Artist artist: this.artists) {
+			sb.append(artist.name);
+			sb.append(',');
+		}
+		sb.deleteCharAt(sb.length()-1);
+		return sb.toString();
+	}
 
 	/**
 	 * Get string version of genre
