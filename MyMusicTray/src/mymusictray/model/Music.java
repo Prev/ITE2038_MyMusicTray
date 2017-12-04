@@ -14,8 +14,6 @@ import java.util.*;
  */
 public class Music extends StrongTypeModel implements ListableModel {
 
-	// TODO: use `artist_music` table
-
 	/**
 	 * Init table `music` and related tables `music_artists` and `music_genre` by SQL
 	 * @throws SQLException

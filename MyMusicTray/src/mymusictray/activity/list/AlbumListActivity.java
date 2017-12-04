@@ -35,9 +35,10 @@ public class AlbumListActivity implements Activity {
 			);
 		}
 		System.out.println("");
-		AlbumListActivity outerActivity = this;
 
 		if (adminInstance != null) {
+			AlbumListActivity outerActivity = this;
+
 			(new ListSelectingActivity<Album>(Album.getAllAlbums()) {
 				@Override
 				public void operate(Album model) {

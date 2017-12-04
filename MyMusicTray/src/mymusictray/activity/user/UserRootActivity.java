@@ -22,13 +22,13 @@ public class UserRootActivity extends MenuActivity {
 	@Override
 	public String[] getMenu() {
 		return new String[] {
-				"View music list",
-				"View artist list",
-				"View album list",
-				"View and manage playlists",
-				"Add new playlist",
+				"View Musics",
+				"View Artists",
+				"View Albums",
+				"Manage Playlists",
+				"Add new Playlist",
 				"Change password",
-				"Remove this account",
+				"[Warning] Remove this account",
 		};
 	}
 

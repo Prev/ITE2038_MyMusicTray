@@ -22,7 +22,7 @@ public class AlbumManageActivity extends MenuActivity {
 	public void start() {
 		IOUtil.printSection("Album Management <" + model.title + ">");
 
-		System.out.println("ID:\t\t\t\t" + this.model.id);
+		System.out.println("ID:\t\t\t\t#" + this.model.id);
 		System.out.println("Title:\t\t\t" + this.model.title);
 		System.out.println("Release Date:\t" + this.model.releaseDate);
 		System.out.println("Type:\t\t\t" + this.model.getReadableType());

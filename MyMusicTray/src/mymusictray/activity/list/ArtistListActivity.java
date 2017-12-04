@@ -1,10 +1,21 @@
 package mymusictray.activity.list;
 
 import mymusictray.activity.Activity;
+import mymusictray.activity.admin.ArtistManageActivity;
+import mymusictray.model.Admin;
 import mymusictray.model.Artist;
 import mymusictray.util.IOUtil;
 
 public class ArtistListActivity implements Activity {
+
+	private Admin adminInstance = null;
+
+	public ArtistListActivity() {}
+
+	public ArtistListActivity(Admin admin) {
+		this.adminInstance = admin;
+	}
+
 
 	@Override
 	public void start() {
@@ -21,5 +32,18 @@ public class ArtistListActivity implements Activity {
 			);
 		}
 		System.out.println("");
+
+
+		if (adminInstance != null) {
+			ArtistListActivity outerActivity = this;
+
+			(new ListSelectingActivity<Artist>(Artist.getAllArtists()) {
+				@Override
+				public void operate(Artist model) {
+					(new ArtistManageActivity(model)).start();
+					outerActivity.start();
+				}
+			}).start();
+		}
 	}
 }

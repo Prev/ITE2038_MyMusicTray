@@ -19,21 +19,19 @@ public class AdminRootActivity extends MenuActivity {
 	@Override
 	public String[] getMenu() {
 		return new String[] {
-				"View music list",
-				"View artist list",
-				"View and manage album list",
-				"Add new artist",
-				"Add new album and music",
+				"View Musics",
+				"Manage Artists",
+				"Manage Albums",
+				"Add New Artist",
+				"Add New Album and Music",
 				"Register new admin",
 				"Change password",
-				"Remove this account",
+				"[Warning] Remove this account",
 		};
 	}
 
 	@Override
 	public void operate(int choice) {
-		// TODO: remove artist,
-
 		switch (choice) {
 			case 1 :
 				// View Music List
@@ -42,7 +40,7 @@ public class AdminRootActivity extends MenuActivity {
 
 			case 2:
 				// View Artist List
-				(new ArtistListActivity()).start();
+				(new ArtistListActivity(this.model)).start();
 				break;
 
 			case 3:
