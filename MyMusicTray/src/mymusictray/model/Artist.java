@@ -146,9 +146,10 @@ public class Artist extends StrongTypeModel implements ListableModel {
 	}
 
 
-
-
-
+	/**
+	 * Add relationship to album, and reflect to database
+	 * @param album: Album instance
+	 */
 	public void addRelationWithAlbum(Album album) {
 		try {
 			PreparedStatement stmt = Context.getConnection().prepareStatement("INSERT INTO `album_artists`(`album_id`, `artist_id`) VALUES (?, ?)");

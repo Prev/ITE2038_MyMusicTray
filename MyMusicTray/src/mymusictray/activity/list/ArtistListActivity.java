@@ -10,11 +10,11 @@ public class ArtistListActivity implements Activity {
 	public void start() {
 		IOUtil.printSection("View Artist List", '-');
 
-		System.out.printf("| %-2s | %-25s | %-15s |\n", "ID", "Name", "Act Start Date");
+		System.out.printf("| %-3s | %-25s | %-15s |\n", "ID", "Name", "Act Start Date");
 		IOUtil.printSection("", '-');
 
 		for (Artist a: Artist.getAllArtists()) {
-			System.out.printf("| %-2d | %-25s | %-15s |\n",
+			System.out.printf("| #%-2d | %-25s | %-15s |\n",
 					a.id,
 					a.name,
 					a.activityStartDate

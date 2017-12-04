@@ -247,6 +247,27 @@ public class Music extends StrongTypeModel implements ListableModel {
 		return sb.toString();
 	}
 
+
+	/**
+	 * Add relationship to artist, and reflect to database
+	 * @param artist: Artist instance
+	 */
+	public void addRelationWithArtist(Artist artist) {
+		try {
+			PreparedStatement stmt = Context.getConnection().prepareStatement("INSERT INTO `music_artists`(`music_id`, `artist_id`) VALUES (?, ?)");
+			stmt.setInt(1, this.id);
+			stmt.setInt(2, artist.id);
+			stmt.executeUpdate();
+
+			this.artists.add(artist);
+
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+
 	/**
 	 * Get string version of genre
 	 * @return Joined string of genre list

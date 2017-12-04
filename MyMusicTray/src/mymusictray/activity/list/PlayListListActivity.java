@@ -18,11 +18,11 @@ public class PlayListListActivity implements Activity {
 	public void start() {
 		IOUtil.printSection("View PlayLists", '-');
 
-		System.out.printf("| %-2s | %-45s | %-12s |\n", "ID", "Name", "Music Counts");
+		System.out.printf("| %-3s | %-45s | %-12s |\n", "ID", "Name", "Music Counts");
 		IOUtil.printSection("", '-');
 
 		for (PlayList p: PlayList.getAllPlaylists(user)) {
-			System.out.printf("| %-2d | %-45s | %-12d |\n",
+			System.out.printf("| #%-2d | %-45s | %-12d |\n",
 					p.id,
 					p.name,
 					p.getMusicCount()

@@ -7,6 +7,9 @@ import mymusictray.model.Artist;
 import mymusictray.model.Music;
 import mymusictray.util.IOUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AlbumManageActivity extends MenuActivity {
 
 	private Album model;
@@ -35,7 +38,7 @@ public class AlbumManageActivity extends MenuActivity {
 		System.out.println("Musics:");
 
 		for (Music m: Music.getMusics("WHERE album_id='"+this.model.id+"'"))
-			System.out.printf("\t\t\t%-2d. %s(#%d) - %s\n", m.trackNo, m.title, m.id, m.getArtistsString());
+			System.out.printf("\t\t\t%2d. %s (#%d) - %s\n", m.trackNo, m.title, m.id, m.getArtistsString());
 
 
 		System.out.println("\n");
@@ -78,12 +81,30 @@ public class AlbumManageActivity extends MenuActivity {
 				// Add music in this album
 				IOUtil.printSection("Add new music to this album", '-');
 
+				// Get artist id list
+				List<String> tmp = new ArrayList<>();
+				for (Artist artist: this.model.artists)
+					tmp.add(Integer.toString(artist.id));
+				String artistIdList = String.join(",", tmp);
+
 				int trackNo = IOUtil.inputNatural("Input track no");
 				String title = IOUtil.inputLine("Input title");
-				String genreList = IOUtil.inputLine("Input genre (separator: ',')");
+				String artistList = IOUtil.inputLine("Input list of artist id [separator: ',']", artistIdList);
+				String genreList = IOUtil.inputLine("Input genre [separator: ',']", this.model.getGenreString());
 
 				Music newMusic = new Music(title, this.model, trackNo);
 				newMusic.insert();
+
+				for (String artistIdStr: artistList.split(",")) {
+					try {
+						Artist artist = Artist.selectById(Integer.parseInt(artistIdStr));
+						newMusic.addRelationWithArtist( artist );
+
+					}catch (NotFoundException e) {
+						System.err.println("Cannot find artist by id '" + artistIdStr + "'");
+						break;
+					}
+				}
 
 				if (genreList != "") {
 					for (String genre: genreList.split(","))
