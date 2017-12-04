@@ -209,12 +209,18 @@ public class IOUtil {
 
 	/**
 	 * Input line that's format is date (guarantee string is date)
+	 *  (WARNING): if defaultValue is not date format, error will be generated when user inputs empty("") string
+	 *
 	 * @param message: Message to show before input
+	 * @param defaultValue: Default value when user input nothing
 	 * @return User typed string
 	 */
-	public static String inputDateString(String message) {
-		System.out.print(message + ": ");
+	public static String inputDateString(String message, String defaultValue) {
+		System.out.print(message + (defaultValue != null ? " (default: " + defaultValue + "): " : "") + ": ");
 		String value = Context.getScanner().nextLine();
+
+		if (defaultValue != null && value.equals(""))
+			value = defaultValue;
 
 		Date date = null;
 		try {
@@ -234,5 +240,14 @@ public class IOUtil {
 		} else {
 			return value;
 		}
+	}
+
+	/**
+	 * Input line that's format is date (guarantee string is date) with no default value
+	 * @param message: Message to show before input
+	 * @return User typed string
+	 */
+	public static String inputDateString(String message) {
+		return inputDateString(message, null);
 	}
 }

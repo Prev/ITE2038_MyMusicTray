@@ -8,14 +8,14 @@ import mymusictray.util.IOUtil;
 
 public class ArtistListActivity implements Activity {
 
-	private Admin adminInstance = null;
+	private boolean manageEntity;
 
-	public ArtistListActivity() {}
-
-	public ArtistListActivity(Admin admin) {
-		this.adminInstance = admin;
+	public ArtistListActivity(boolean manageEntity) {
+		this.manageEntity = manageEntity;
 	}
-
+	public ArtistListActivity() {
+		this(false);
+	}
 
 	@Override
 	public void start() {
@@ -34,7 +34,7 @@ public class ArtistListActivity implements Activity {
 		System.out.println("");
 
 
-		if (adminInstance != null) {
+		if (manageEntity) {
 			ArtistListActivity outerActivity = this;
 
 			(new ListSelectingActivity<Artist>(Artist.getAllArtists()) {

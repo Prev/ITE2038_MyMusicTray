@@ -52,6 +52,7 @@ public class AlbumManageActivity extends MenuActivity {
 				"Add artist to this album",
 				"Add music in this album",
 				"Remove music in this album",
+				"Edit information",
 				"[Warning] Remove this album",
 		};
 	}
@@ -137,6 +138,28 @@ public class AlbumManageActivity extends MenuActivity {
 				break;
 
 			case 4:
+				// Edit information
+				String newTitle = IOUtil.inputLine("Input title of album", this.model.title);
+				String releaseDate = IOUtil.inputDateString("Input release date of album (yyyy-MM-dd)", this.model.releaseDate);
+
+				System.out.println("Select type of this album (current is "+this.model.getReadableType()+"): ");
+				int type = IOUtil.openChoices(new String[]{
+						Album.getReadableType(Album.TYPE_REGULAR),
+						Album.getReadableType(Album.TYPE_MINI),
+						Album.getReadableType(Album.TYPE_SINGLE),
+				}, false);
+
+
+				this.model.title = newTitle;
+				this.model.releaseDate = releaseDate;
+				this.model.type = type;
+				this.model.update();
+
+				IOUtil.printPopup("Information is changed successfully");
+				return;
+
+			case 5:
+				//Remove this album
 				this.model.remove();
 				IOUtil.printPopup("Album '" + this.model.title + "' is removed");
 				return;

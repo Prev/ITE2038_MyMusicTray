@@ -40,12 +40,12 @@ public class AdminRootActivity extends MenuActivity {
 
 			case 2:
 				// View Artist List
-				(new ArtistListActivity(this.model)).start();
+				(new ArtistListActivity(true)).start();
 				break;
 
 			case 3:
 				// View Album List
-				(new AlbumListActivity(this.model)).start();
+				(new AlbumListActivity(true)).start();
 
 				break;
 

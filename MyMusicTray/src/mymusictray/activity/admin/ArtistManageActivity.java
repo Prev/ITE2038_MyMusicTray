@@ -37,7 +37,7 @@ public class ArtistManageActivity extends MenuActivity {
 			case 1:
 				// Edit information
 				String name = IOUtil.inputLine("Input name of artist", this.model.name);
-				String activityStartDate = IOUtil.inputDateString("Input activity start date (yyyy-MM-dd)");
+				String activityStartDate = IOUtil.inputDateString("Input activity start date (yyyy-MM-dd)", this.model.activityStartDate);
 
 				this.model.name = name;
 				this.model.activityStartDate = activityStartDate;

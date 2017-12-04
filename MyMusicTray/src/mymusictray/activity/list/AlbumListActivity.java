@@ -9,12 +9,13 @@ import mymusictray.util.IOUtil;
 
 public class AlbumListActivity implements Activity {
 
-	private Admin adminInstance = null;
+	private boolean manageEntity;
 
-	public AlbumListActivity() {}
-
-	public AlbumListActivity(Admin admin) {
-		this.adminInstance = admin;
+	public AlbumListActivity(boolean manageEntity) {
+		this.manageEntity = manageEntity;
+	}
+	public AlbumListActivity() {
+		this(false);
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class AlbumListActivity implements Activity {
 		}
 		System.out.println("");
 
-		if (adminInstance != null) {
+		if (manageEntity) {
 			AlbumListActivity outerActivity = this;
 
 			(new ListSelectingActivity<Album>(Album.getAllAlbums()) {
