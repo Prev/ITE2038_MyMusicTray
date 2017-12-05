@@ -11,16 +11,38 @@ import java.util.Scanner;
 public class IOUtil {
 
 	public static final String ANSI_RESET = "\u001B[0m";
-	public static final String ANSI_BLACK = "\u001B[30m";
-	public static final String ANSI_RED = "\u001B[31m";
 	public static final String ANSI_GREEN = "\u001B[32m";
 	public static final String ANSI_YELLOW = "\u001B[33m";
-	public static final String ANSI_BLUE = "\u001B[34m";
-	public static final String ANSI_PURPLE = "\u001B[35m";
-	public static final String ANSI_CYAN = "\u001B[36m";
-	public static final String ANSI_WHITE = "\u001B[37m";
 
 	private static final int SECTION_LENGTH = 90;
+
+	private static void greenColor() {
+		if (System.getProperty("os.name").indexOf("Windows") != -1) return;
+		System.out.print(ANSI_GREEN);
+	}
+
+	private static void yellowColor() {
+		if (System.getProperty("os.name").indexOf("Windows") != -1) return;
+		System.out.print(ANSI_YELLOW);
+	}
+
+	private static void resetColor() {
+		if (System.getProperty("os.name").indexOf("Windows") != -1) return;
+		System.out.print(ANSI_RESET);
+	}
+
+	private static void yellow(String message) {
+		yellowColor();
+		System.out.println(message);
+		resetColor();
+	}
+
+	private static void green(String message) {
+		greenColor();
+		System.out.println(message);
+		resetColor();
+	}
+
 
 	/**
 	 * Print section like `=========== [Admin Menu] ============`
@@ -74,7 +96,7 @@ public class IOUtil {
 	 * @param message: Sub message of popup under title
 	 */
 	public static void printPopup(String title, String message) {
-		System.out.print(ANSI_GREEN);
+		greenColor();
 
 		IOUtil.printSection('-');
 		IOUtil.printSection("<" + title + ">", ' ');
@@ -82,7 +104,7 @@ public class IOUtil {
 			IOUtil.printSection(message, ' ');
 		IOUtil.printSection('-');
 
-		System.out.print(ANSI_RESET);
+		resetColor();
 	}
 
 	/**
@@ -117,8 +139,6 @@ public class IOUtil {
 		Scanner scanner = Context.getScanner();
 		int startIndex = startFromZero ? 0 : 1;
 
-		//printSection('-');
-
 		for (int i = 0; i < choices.length; i++)
 			System.out.printf("%d: %s\n", i+startIndex, choices[i]);
 
@@ -134,7 +154,7 @@ public class IOUtil {
 
 		} finally {
 			if (value < startIndex || value >= choices.length + startIndex) {
-				System.out.println(ANSI_YELLOW + "Invalid input. Please try again." + ANSI_RESET);
+				yellow("Invalid input. Please try again.");
 
 				printSection('-');
 				return openChoices(choices, startFromZero);
@@ -171,7 +191,7 @@ public class IOUtil {
 		String rst = Context.getScanner().nextLine();
 
 		if (rst.equals("")) {
-			System.out.println(ANSI_YELLOW + "Invalid input. Please try again." + ANSI_RESET);
+			yellow("Invalid input. Please try again.");
 			return inputLine(message);
 		}
 		return rst;
@@ -195,7 +215,7 @@ public class IOUtil {
 
 		} finally {
 			if (value < -1) {
-				System.out.println(ANSI_YELLOW + "Invalid input. Please try again." + ANSI_RESET);
+				yellow("Invalid input. Please try again.");
 
 				printSection('-');
 				return inputNatural(message);
@@ -234,7 +254,7 @@ public class IOUtil {
 		}
 
 		if (date == null) {
-			System.out.println(ANSI_YELLOW + "Value is not date format. Please try again." + ANSI_RESET);
+			yellow("Value is not date format. Please try again.");
 			return inputDateString(message);
 
 		} else {
