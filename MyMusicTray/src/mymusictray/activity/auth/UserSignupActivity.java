@@ -8,7 +8,7 @@ public class UserSignupActivity implements Activity {
 
 	@Override
 	public void start() {
-		IOUtil.printSection("Register New Admin", '-');
+		IOUtil.printSection("User Signup", '-');
 
 		String accountId = IOUtil.inputLine("Input account ID");
 		String password = IOUtil.inputLine("Input password");
@@ -20,7 +20,7 @@ public class UserSignupActivity implements Activity {
 		}
 
 		String name = IOUtil.inputLine("Input name");
-		String birthday = IOUtil.inputDateString("Input birthday");
+		String birthday = IOUtil.inputDateString("Input birthday (yyyy-MM-dd)");
 		String emailAddress = IOUtil.inputLine("Input email address");
 		String phoneNumber = IOUtil.inputLine("Input phone number");
 

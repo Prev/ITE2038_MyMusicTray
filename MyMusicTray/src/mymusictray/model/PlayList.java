@@ -48,7 +48,7 @@ public class PlayList extends StrongTypeModel implements ListableModel {
 
 		try {
 			ResultSet rs = Context.getDatabaseDriver().getStatement().executeQuery(
-					"SELECT *, (SELECT COUNT(*) FROM playlist_item WHERE id = playlist.id) AS cnt\n" +
+					"SELECT *, (SELECT COUNT(*) FROM playlist_item WHERE playlist_id = playlist.id) AS cnt\n" +
 					"FROM playlist\n" +
 					"WHERE owner = '"+owner.id+"'"
 			);
